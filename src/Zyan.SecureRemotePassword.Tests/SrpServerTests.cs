@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security;
 using NUnit.Framework;
 
 namespace Zyan.SecureRemotePassword.Tests
@@ -45,6 +43,34 @@ namespace Zyan.SecureRemotePassword.Tests
 			Assert.IsNotNull(serverSession);
 			Assert.AreEqual(serverSessionKey, serverSession.Key);
 			Assert.AreEqual(serverSessionProof, serverSession.Proof);
+		}
+
+		[TestMethod]
+		public void SrpServerDoesntAcceptInvalidClientEphemeral()
+		{
+			var serverSecretEphemeral = "e252dc34cc300c5f330ae3c684bf1b1657f5b1ca694bbfbba14829bb16e5638c";
+			var clientPublicEphemeral = "0";
+			var salt = "d420d13b7e510e9457fb59d03819c6475fe53f680b4abb963ef9f6d4f6ddb04e";
+			var username = "bozo";
+			var verifier = "a9f253f5da8b0ec3ea2fdf01ae497799ff2fb3b4b2c2c488b01c9beeeed543a9de3c7014d05b4014e0986dda96c9f416d90c858a7483740845f0f6cd5a6eef1b140d1b46bb37f5bcfbb28127bf84f9b7f5c0d5cc4329cb7b166ff45375becdfe941664167903fb0fc9c035ee5b3cb5411a34b91e2f9b0dcc5310bf1b6c514ac63a15eb811bb652a65f96e105079942a5c7d21724910c1c2a2615ea1ceeddcc879c05658e6efd75db15250300080680875d4e31054dc508d446db31e2683724c785e7651fdf26faea054479ce95ea2443e6464ba1f53b62e7eaa8e21075a082a7ed6d937be65e835bacaa37d45651baf202601506e6246a2a183e178acc50bbd5";
+			var clientSessionProof = "63f0ae40f93cce889c08dc143e2535d8b0797920cdd29484e77aec010827692a";
+
+			Assert.Throws<SecurityException>(() =>
+				new SrpServer().DeriveSession(serverSecretEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof));
+		}
+
+		[TestMethod]
+		public void SrpServerDoesntAcceptInvalidClientSessionProof()
+		{
+			var serverSecretEphemeral = "e252dc34cc300c5f330ae3c684bf1b1657f5b1ca694bbfbba14829bb16e5638c";
+			var clientPublicEphemeral = "278f74f97e2dcdf886769ce31c87513a4a73548762a29b2db0188757fdccf066393ed79305d946e80b6e5d963771d62475566cb2ce0883076c8846d8f961d9396ffcba54447879772b4b8a43de258662e52407bb7f0f6397a8402173f69e4a306aed850b9df89fc78ddbc72d76aa6b0e99555e8b08a21b4d91c6cd86cee4c2117a54a0a58ae0a7f6f0c8699cf0709e9ac7ba009c2e304b3e8559d76d3b3a27c016f2647a3f4ba3f94494a4a61d799d9fda67000331976f8e1b6f5b68504cadfd9a48fa5dc73ef39b7e7ad07338a7fc7bd82777bd7ad2a7b7abcbbcbfa50e0e949b2a5726fe30361298b3981e620fb57f0c58684b5b24ad317f18b288474b10d8";
+			var salt = "d420d13b7e510e9457fb59d03819c6475fe53f680b4abb963ef9f6d4f6ddb04e";
+			var username = "bozo";
+			var verifier = "a9f253f5da8b0ec3ea2fdf01ae497799ff2fb3b4b2c2c488b01c9beeeed543a9de3c7014d05b4014e0986dda96c9f416d90c858a7483740845f0f6cd5a6eef1b140d1b46bb37f5bcfbb28127bf84f9b7f5c0d5cc4329cb7b166ff45375becdfe941664167903fb0fc9c035ee5b3cb5411a34b91e2f9b0dcc5310bf1b6c514ac63a15eb811bb652a65f96e105079942a5c7d21724910c1c2a2615ea1ceeddcc879c05658e6efd75db15250300080680875d4e31054dc508d446db31e2683724c785e7651fdf26faea054479ce95ea2443e6464ba1f53b62e7eaa8e21075a082a7ed6d937be65e835bacaa37d45651baf202601506e6246a2a183e178acc50bbd5";
+			var clientSessionProof = "321";
+
+			Assert.Throws<SecurityException>(() =>
+				new SrpServer().DeriveSession(serverSecretEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof));
 		}
 
 		[TestMethod]

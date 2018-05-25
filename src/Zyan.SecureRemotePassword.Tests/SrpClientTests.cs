@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Security;
 using System.Security.Cryptography;
 using NUnit.Framework;
 
@@ -88,6 +87,19 @@ namespace Zyan.SecureRemotePassword.Tests
 		}
 
 		[TestMethod]
+		public void SrpClientDoesntAcceptZeroB()
+		{
+			var clientEphemeralSecret = "27b282fc8fbf8d8a5a075ff4992406ec730bc80eea2f9b89a75bb95f1272265e";
+			var serverEphemeralPublic = "0";
+			var salt = "d420d13b7e510e9457fb59d03819c6475fe53f680b4abb963ef9f6d4f6ddb04e";
+			var username = "bozo";
+			var privateKey = "f8af13ffc45b3c64a826e3a133b8a74d0484e47625c049b7f635dd233cbda124";
+
+			Assert.Throws<SecurityException>(() =>
+				new SrpClient().DeriveSession(clientEphemeralSecret, serverEphemeralPublic, salt, username, privateKey));
+		}
+
+		[TestMethod]
 		public void SrpClientDeriveSessionRegressionTest()
 		{
 			var clientEphemeralSecret = "72dac3f6f7ade13135e234d9d3c4899453418c929af72c4171ffdc920fcf2535";
@@ -118,6 +130,23 @@ namespace Zyan.SecureRemotePassword.Tests
 			};
 
 			new SrpClient().VerifySession(clientEphemeralPublic, clientSession, serverSessionProof);
+		}
+
+		[TestMethod]
+		public void SrpClientDoesntAcceptWrongSessionProof()
+		{
+			var clientEphemeralPublic = "30fca5854c2391faa219fd863487c31f2591f5ba9988ce5129319906929ff2d23bc4e24c3f36f6ed12034111881ca705b033edfb782a1714e0f4d892f17c7d8432a1089c311c3170848bba0a0f64930d3f097c670b08384f1641a73833edaf9d1493744e655043df0d68f0c18a1571cc1c07c41ad817b57c262f48dde991d413628c0f3fa1de55afcf2d87e994c7f6e25c07cf1a803d41f555158997cd8703da68a48e54598b5b4947cc661d5c0138a5ecaa55996d5d6b566578f9de3b1ca1e128ff223c290595252497835646b9f8c0e330f4d6a3e61f31ff3eb8e305f563cb112ca90942e770f94cd02396041ab4c47e0c58675ded8bb0026640f9723b4d67";
+			var clientSessionKey = "0bb4c696fd6f240fa0b268f3ce267044b05d620ac5f9871d21e4f89a3b0ac841";
+			var clientSessionProof = "50a240e5b5f4d0db633e147d92a32aa0c9451e5d0508bded623b40200d237eef";
+			var serverSessionProof = "123";
+			var clientSession = new SrpSession
+			{
+				Key = clientSessionKey,
+				Proof = clientSessionProof,
+			};
+
+			Assert.Throws<SecurityException>(() =>
+				new SrpClient().VerifySession(clientEphemeralPublic, clientSession, serverSessionProof));
 		}
 	}
 }
