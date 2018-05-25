@@ -17,11 +17,10 @@ before_test:
 - where nunit-console.exe
 
 test_script: 
-- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net35\Zyan.SecureRemotePassword.Tests.dll" -filter:"+[*]* -[MemoDb]*" -output:".\SrpNet35.xml"
-- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net461\Zyan.SecureRemotePassword.Tests.dll" -output:".\SrpNet461.xml"
+- vstest.console.exe /logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net35\Zyan.SecureRemotePassword.Tests.dll
+- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net461\Zyan.SecureRemotePassword.Tests.dll" -filter:"+[*]* -[MemoDb]*" -output:".\SrpNet461.xml"
 - OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\netcoreapp2.0\Zyan.SecureRemotePassword.Tests.dll" -output:".\SrpNetCore20.xml"
 
 after_test:
-- codecov -f "SrpNet35.xml"
 - codecov -f "SrpNet461.xml"
 - codecov -f "SrpNetCore20.xml"
