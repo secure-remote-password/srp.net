@@ -1,0 +1,27 @@
+version: 1.0.{build}
+clone_folder: c:\projects\dotnet-srp
+image: Visual Studio 2017
+
+before_build:
+- nuget restore src\Zyan.SecureRemotePassword.sln
+- choco install opencover.portable
+- choco install codecov
+
+build:
+  project: src\Zyan.SecureRemotePassword.sln
+  parallel: true
+  verbosity: minimal
+
+before_test:
+- where vstest.console
+- where nunit-console.exe
+
+test_script: 
+- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net35\Zyan.SecureRemotePassword.Tests.dll" -filter:"+[*]* -[MemoDb]*" -output:".\SrpNet35.xml"
+- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net461\Zyan.SecureRemotePassword.Tests.dll" -output:".\SrpNet461.xml"
+- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\netcoreapp2.0\Zyan.SecureRemotePassword.Tests.dll" -output:".\SrpNetCore20.xml"
+
+after_test:
+- codecov -f "SrpNet35.xml"
+- codecov -f "SrpNet461.xml"
+- codecov -f "SrpNetCore20.xml"
