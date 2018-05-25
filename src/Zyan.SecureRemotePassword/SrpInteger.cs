@@ -82,7 +82,7 @@ namespace Zyan.Communication.Security.SecureRemotePassword
 				throw new ArgumentException("Integer size in bytes should be positive", "bytes");
 			}
 
-			var random = new RNGCryptoServiceProvider();
+			var random = RandomNumberGenerator.Create();
 			var randomBytes = new byte[bytes];
 			random.GetNonZeroBytes(randomBytes);
 
