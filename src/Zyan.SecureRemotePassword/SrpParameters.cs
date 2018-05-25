@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Zyan.Communication.Security.SecureRemotePassword
+namespace Zyan.SecureRemotePassword
 {
 	/// <summary>
 	/// SRP-6a protocol parameters.
