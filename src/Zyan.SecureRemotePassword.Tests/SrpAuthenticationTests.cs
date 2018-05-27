@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Zyan.SecureRemotePassword.Tests
@@ -14,6 +16,114 @@ namespace Zyan.SecureRemotePassword.Tests
 	[TestClass]
 	public class SrpAuthenticationTests
 	{
+		public class TestVectorSet
+		{
+			public string Comments { get; set; }
+			public string Url { get; set; }
+			public TestVector[] TestVectors { get; set; }
+
+			public class TestVector
+			{
+				public string H { get; set; }
+				public int Size { get; set; }
+				public string N { get; set; }
+				public string g { get; set; }
+				public string I { get; set; }
+				public string P { get; set; }
+				public string s { get; set; }
+				public string k { get; set; }
+				public string x { get; set; }
+				public string v { get; set; }
+				public string a { get; set; }
+				public string b { get; set; }
+				public string A { get; set; }
+				public string B { get; set; }
+				public string u { get; set; }
+				public string S { get; set; }
+			}
+		}
+
+		[TestMethod]
+		public void VerifyTestVector()
+		{
+			var json = new WebClient().DownloadString("https://raw.githubusercontent.com/secure-remote-password/test-vectors/master/rfc5054.json");
+			var testVectors = JsonConvert.DeserializeObject<TestVectorSet>(json);
+			foreach (var tv in testVectors.TestVectors)
+			{
+				VerifyTestVector(tv);
+			}
+		}
+
+		private void VerifyTestVector(TestVectorSet.TestVector testVector)
+		{
+			// prepare parameters
+			var N = SrpInteger.FromHex(testVector.N);
+			var g = SrpInteger.FromHex(testVector.g);
+			var p = SrpParameters.Create<SHA1>(N, g);
+			var H = p.H;
+			var k = p.K;
+			var kx = SrpInteger.FromHex(testVector.k);
+			Assert.AreEqual(kx, k);
+
+			// prepare user name, password and salt
+			var I = testVector.I;
+			var P = testVector.P;
+			var s = SrpInteger.FromHex(testVector.s).ToHex();
+			var client = new SrpClient(p);
+			var server = new SrpServer(p);
+
+			// validate the private key
+			var x = SrpInteger.FromHex(client.DerivePrivateKey(s, I, P));
+			var xx = SrpInteger.FromHex(testVector.x);
+			Assert.AreEqual(xx, x);
+
+			// validate the verifier
+			var v = SrpInteger.FromHex(client.DeriveVerifier(x));
+			var vx = SrpInteger.FromHex(testVector.v);
+			Assert.AreEqual(vx, v);
+
+			// client ephemeral
+			var a = SrpInteger.FromHex(testVector.a);
+			var A = client.ComputeA(a);
+			var Ax = SrpInteger.FromHex(testVector.A);
+			Assert.AreEqual(Ax, A);
+			var clientEphemeral = new SrpEphemeral { Public = A, Secret = a };
+
+			// server ephemeral
+			var b = SrpInteger.FromHex(testVector.b);
+			var B = server.ComputeB(v, b);
+			var Bx = SrpInteger.FromHex(testVector.B);
+			Assert.AreEqual(Bx, B);
+			var serverEphemeral = new SrpEphemeral { Public = B, Secret = a };
+
+			// u
+			var u = client.ComputeU(A, B);
+			var ux = SrpInteger.FromHex(testVector.u);
+			Assert.AreEqual(ux, u);
+
+			// premaster secret — client version
+			var S = client.ComputeS(a, B, u, x);
+			var Sx = SrpInteger.FromHex(testVector.S);
+			Assert.AreEqual(Sx, S);
+
+			// premaster secret — server version
+			S = server.ComputeS(A, b, u, v);
+			Assert.AreEqual(Sx, S);
+
+			// client session
+			var clientSession = client.DeriveSession(a, B, s, I, x);
+			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", clientSession.Key);
+			Assert.AreEqual("3f3bc67169ea71302599cf1b0f5d408b7b65d347", clientSession.Proof);
+
+			// server session
+			var serverSession = server.DeriveSession(b, A, s, I, v, clientSession.Proof);
+			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", serverSession.Key);
+			Assert.AreEqual("9cab3c575a11de37d3ac1421a9f009236a48eb55", serverSession.Proof);
+
+			// verify server session
+			client.VerifySession(A, clientSession, serverSession.Proof);
+		}
+
 		[TestMethod]
 		public void SrpTestVectorsFromRfc5054()
 		{
