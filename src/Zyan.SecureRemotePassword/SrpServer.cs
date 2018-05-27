@@ -24,7 +24,26 @@ namespace Zyan.SecureRemotePassword
 		/// <summary>
 		/// Generates the ephemeral value from the given verifier.
 		/// </summary>
+		/// <param name="verifier">Verifier.</param>
 		public SrpEphemeral GenerateEphemeral(string verifier)
+		{
+			// B = kv + g^b (b = random number)
+			var b = SrpInteger.RandomInteger(Parameters.HashSizeBytes);
+			var B = ComputeB(verifier, b);
+
+			return new SrpEphemeral
+			{
+				Secret = b.ToHex(),
+				Public = B.ToHex(),
+			};
+		}
+
+		/// <summary>
+		/// Generates the public ephemeral value from the given verifier and the secret.
+		/// </summary>
+		/// <param name="verifier">Verifier.</param>
+		/// <param name="b">Secret server ephemeral.</param>
+		internal SrpInteger ComputeB(string verifier, SrpInteger b)
 		{
 			// N — A large safe prime (N = 2q+1, where q is prime)
 			// g — A generator modulo N
@@ -32,20 +51,28 @@ namespace Zyan.SecureRemotePassword
 			var N = Parameters.N;
 			var g = Parameters.G;
 			var k = Parameters.K;
-			var size = Parameters.HashSizeBytes;
 
 			// v — Password verifier
 			var v = SrpInteger.FromHex(verifier);
 
 			// B = kv + g^b (b = random number)
-			var b = SrpInteger.RandomInteger(size);
-			var B = (k * v + g.ModPow(b, N)) % N;
+			return (k * v + g.ModPow(b, N)) % N;
+		}
 
-			return new SrpEphemeral
-			{
-				Secret = b.ToHex(),
-				Public = B.ToHex(),
-			};
+		/// <summary>
+		/// Computes S, the premaster-secret.
+		/// </summary>
+		/// <param name="A">Client public ephemeral value.</param>
+		/// <param name="b">Server secret ephemeral value.</param>
+		/// <param name="u">The computed value of u</param>
+		/// <param name="v">The verifier.</param>
+		internal SrpInteger ComputeS(SrpInteger A, SrpInteger b, SrpInteger u, SrpInteger v)
+		{
+			// N — A large safe prime (N = 2q+1, where q is prime)
+			var N = Parameters.N;
+
+			// S = (Av^u) ^ b (computes session key)
+			return (A * v.ModPow(u, N)).ModPow(b, N);
 		}
 
 		/// <summary>
@@ -97,7 +124,7 @@ namespace Zyan.SecureRemotePassword
 			var u = H(PAD(A), PAD(B));
 
 			// S = (Av^u) ^ b (computes session key)
-			var S = (A * v.ModPow(u, N)).ModPow(b, N);
+			var S = ComputeS(A, b, u, v);
 
 			// K = H(S)
 			var K = H(S);

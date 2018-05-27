@@ -34,15 +34,16 @@ namespace Zyan.SecureRemotePassword.Tests
 			var I = "alice";
 			var P = "password123";
 			var s = SrpInteger.FromHex(@"BEB25379 D1A8581E B5A72767 3A2441EE").ToHex();
-			var srp = new SrpClient(p);
+			var client = new SrpClient(p);
+			var server = new SrpServer(p);
 
 			// validate the private key
-			var x = SrpInteger.FromHex(srp.DerivePrivateKey(s, I, P));
+			var x = SrpInteger.FromHex(client.DerivePrivateKey(s, I, P));
 			var xx = SrpInteger.FromHex(@"94B7555A ABE9127C C58CCF49 93DB6CF8 4D16C124");
 			Assert.AreEqual(xx, x);
 
 			// validate the verifier
-			var v = SrpInteger.FromHex(srp.DeriveVerifier(x));
+			var v = SrpInteger.FromHex(client.DeriveVerifier(x));
 			var vx = SrpInteger.FromHex(@"
 				7E273DE8 696FFC4F 4E337D05 B4B375BE B0DDE156 9E8FA00A 9886D812
 				9BADA1F1 822223CA 1A605B53 0E379BA4 729FDC59 F105B478 7E5186F5
@@ -53,7 +54,7 @@ namespace Zyan.SecureRemotePassword.Tests
 
 			// client ephemeral
 			var a = SrpInteger.FromHex("60975527 035CF2AD 1989806F 0407210B C81EDC04 E2762A56 AFD529DD DA2D4393");
-			var A = g.ModPow(a, N);
+			var A = client.ComputeA(a);
 			var Ax = SrpInteger.FromHex(@"
 				61D5E490 F6F1B795 47B0704C 436F523D D0E560F0 C64115BB 72557EC4
 				4352E890 3211C046 92272D8B 2D1A5358 A2CF1B6E 0BFCF99F 921530EC
@@ -65,7 +66,7 @@ namespace Zyan.SecureRemotePassword.Tests
 
 			// server ephemeral
 			var b = SrpInteger.FromHex("E487CB59 D31AC550 471E81F0 0F6928E0 1DDA08E9 74A004F4 9E61F5D1 05284D20");
-			var B = (k * SrpInteger.FromHex(v) + g.ModPow(b, N)) % N;
+			var B = server.ComputeB(v, b);
 			var Bx = SrpInteger.FromHex(@"
 				BD0C6151 2C692C0C B6D041FA 01BB152D 4916A1E7 7AF46AE1 05393011
 				BAF38964 DC46A067 0DD125B9 5A981652 236F99D9 B681CBF8 7837EC99
@@ -73,15 +74,15 @@ namespace Zyan.SecureRemotePassword.Tests
 				37089E6F 9C6059F3 88838E7A 00030B33 1EB76840 910440B1 B27AAEAE
 				EB4012B7 D7665238 A8E3FB00 4B117B58");
 			Assert.AreEqual(Bx, B);
-			var serverEphemeral = new SrpEphemeral { Public = B, Secret = b };
+			var serverEphemeral = new SrpEphemeral { Public = B, Secret = a };
 
 			// u
-			var u = H(A, B);
+			var u = client.ComputeU(A, B);
 			var ux = SrpInteger.FromHex("CE38B959 3487DA98 554ED47D 70A7AE5F 462EF019");
 			Assert.AreEqual(ux, u);
 
 			// premaster secret — client version
-			var S = (B - (k * (g.ModPow(x, N)))).ModPow(a + (u * x), N);
+			var S = client.ComputeS(a, B, u, x);
 			var Sx = SrpInteger.FromHex(@"
 				B0DC82BA BCF30674 AE450C02 87745E79 90A3381F 63B387AA F271A10D
 				233861E3 59B48220 F7C4693C 9AE12B0A 6F67809F 0876E2D0 13800D6C
@@ -91,21 +92,21 @@ namespace Zyan.SecureRemotePassword.Tests
 			Assert.AreEqual(Sx, S);
 
 			// premaster secret — server version
-			S = (A * v.ModPow(u, N)).ModPow(b, N);
+			S = server.ComputeS(A, b, u, v);
 			Assert.AreEqual(Sx, S);
 
 			// client session
-			var session = srp.DeriveSession(a, B, s, I, x);
-			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", session.Key);
-			Assert.AreEqual("3f3bc67169ea71302599cf1b0f5d408b7b65d347", session.Proof);
+			var clientSession = client.DeriveSession(a, B, s, I, x);
+			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", clientSession.Key);
+			Assert.AreEqual("3f3bc67169ea71302599cf1b0f5d408b7b65d347", clientSession.Proof);
 
 			// server session
-			var srvsess = new SrpServer(p).DeriveSession(b, A, s, I, v, session.Proof);
-			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", srvsess.Key);
-			Assert.AreEqual("9cab3c575a11de37d3ac1421a9f009236a48eb55", srvsess.Proof);
+			var serverSession = server.DeriveSession(b, A, s, I, v, clientSession.Proof);
+			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", serverSession.Key);
+			Assert.AreEqual("9cab3c575a11de37d3ac1421a9f009236a48eb55", serverSession.Proof);
 
 			// verify server session
-			srp.VerifySession(A, session, srvsess.Proof);
+			client.VerifySession(A, clientSession, serverSession.Proof);
 		}
 
 		[TestMethod]
