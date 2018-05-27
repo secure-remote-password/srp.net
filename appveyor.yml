@@ -2,6 +2,9 @@ version: 1.0.{build}
 clone_folder: c:\projects\dotnet-srp
 image: Visual Studio 2017
 
+install:
+- git submodule update --init --recursive
+
 before_build:
 - nuget restore src\Zyan.SecureRemotePassword.sln
 - choco install opencover.portable

@@ -1,0 +1,3 @@
+[submodule "src/Zyan.SecureRemotePassword.Tests/TestVectors"]
+	path = src/Zyan.SecureRemotePassword.Tests/TestVectors
+	url = https://github.com/secure-remote-password/test-vectors.git
