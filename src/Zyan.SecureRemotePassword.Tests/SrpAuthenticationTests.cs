@@ -16,33 +16,6 @@ namespace Zyan.SecureRemotePassword.Tests
 	[TestClass]
 	public class SrpAuthenticationTests
 	{
-		public class TestVectorSet
-		{
-			public string Comments { get; set; }
-			public string Url { get; set; }
-			public TestVector[] TestVectors { get; set; }
-
-			public class TestVector
-			{
-				public string H { get; set; }
-				public int Size { get; set; }
-				public string N { get; set; }
-				public string g { get; set; }
-				public string I { get; set; }
-				public string P { get; set; }
-				public string s { get; set; }
-				public string k { get; set; }
-				public string x { get; set; }
-				public string v { get; set; }
-				public string a { get; set; }
-				public string b { get; set; }
-				public string A { get; set; }
-				public string B { get; set; }
-				public string u { get; set; }
-				public string S { get; set; }
-			}
-		}
-
 		[TestMethod]
 		public void VerifyTestVector()
 		{
@@ -57,11 +30,13 @@ namespace Zyan.SecureRemotePassword.Tests
 		private void VerifyTestVector(TestVectorSet.TestVector testVector)
 		{
 			// prepare parameters
-			var N = SrpInteger.FromHex(testVector.N);
-			var g = SrpInteger.FromHex(testVector.g);
-			var p = SrpParameters.Create<SHA1>(N, g);
-			var H = p.H;
-			var k = p.K;
+			var parameters = testVector.CreateParameters();
+			var N = parameters.N;
+			var g = parameters.G;
+			var H = parameters.H;
+
+			// validate the multiplier parameter
+			var k = parameters.K;
 			var kx = SrpInteger.FromHex(testVector.k);
 			Assert.AreEqual(kx, k);
 
@@ -69,8 +44,8 @@ namespace Zyan.SecureRemotePassword.Tests
 			var I = testVector.I;
 			var P = testVector.P;
 			var s = SrpInteger.FromHex(testVector.s).ToHex();
-			var client = new SrpClient(p);
-			var server = new SrpServer(p);
+			var client = new SrpClient(parameters);
+			var server = new SrpServer(parameters);
 
 			// validate the private key
 			var x = SrpInteger.FromHex(client.DerivePrivateKey(s, I, P));
@@ -96,7 +71,7 @@ namespace Zyan.SecureRemotePassword.Tests
 			Assert.AreEqual(Bx, B);
 			var serverEphemeral = new SrpEphemeral { Public = B, Secret = a };
 
-			// u
+			// validate u
 			var u = client.ComputeU(A, B);
 			var ux = SrpInteger.FromHex(testVector.u);
 			Assert.AreEqual(ux, u);
@@ -112,16 +87,25 @@ namespace Zyan.SecureRemotePassword.Tests
 
 			// client session
 			var clientSession = client.DeriveSession(a, B, s, I, x);
-			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", clientSession.Key);
-			Assert.AreEqual("3f3bc67169ea71302599cf1b0f5d408b7b65d347", clientSession.Proof);
+			if (testVector.M1 != null)
+			{
+				Assert.AreEqual(testVector.M1, clientSession.Proof);
+			}
 
 			// server session
 			var serverSession = server.DeriveSession(b, A, s, I, v, clientSession.Proof);
-			Assert.AreEqual("017eefa1cefc5c2e626e21598987f31e0f1b11bb", serverSession.Key);
-			Assert.AreEqual("9cab3c575a11de37d3ac1421a9f009236a48eb55", serverSession.Proof);
+			Assert.AreEqual(clientSession.Key, serverSession.Key);
+			if (testVector.M2 != null)
+			{
+				Assert.AreEqual(testVector.M2, serverSession.Proof);
+			}
 
 			// verify server session
 			client.VerifySession(A, clientSession, serverSession.Proof);
+			if (testVector.K != null)
+			{
+				Assert.AreEqual(testVector.K, serverSession.Key);
+			}
 		}
 
 		[TestMethod]
