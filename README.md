@@ -39,3 +39,9 @@ client.VerifySession(clientEphemeral.Public, clientSession, serverSession.Proof)
 // both the client and the server have the same session key
 Assert.AreEqual(clientSession.Key, serverSession.Key);
 ```
+
+## References
+
+* [Secure Remote Password protocol](http://srp.stanford.edu/), [documentation](http://srp.stanford.edu/doc.html), [wikipedia](http://en.wikipedia.org/wiki/Secure_remote_password_protocol)
+* [RFC2945](http://www.ietf.org/rfc/rfc2945.txt) — The SRP Authentication and Key Exchange System
+* [RFC5054](http://www.ietf.org/rfc/rfc5054.txt) — Using the Secure Remote Password (SRP) Protocol for TLS Authentication

@@ -38,10 +38,8 @@ namespace Zyan.SecureRemotePassword.Tests
 
 			private SrpParameters CreateParameters<T>() where T : HashAlgorithm
 			{
-				// convert size in bits to chars
-				var paddedLengthInChars = Size / 4;
-
-				return SrpParameters.Create<T>(N, g, paddedLengthInChars);
+				// convert size in bits to padded length in chars
+				return SrpParameters.Create<T>(N, g, paddedLength: Size / 4);
 			}
 
 			/// <summary>
