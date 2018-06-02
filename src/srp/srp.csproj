@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>SRP-6a protocol implementation</Description>
+    <Description>SRP-6a protocol implementation for .NET Standard 2.0 and .NET Framework 3.5+</Description>
     <Copyright>Copyright © 2018 Alexey Yakovlev</Copyright>
     <AssemblyTitle>srp</AssemblyTitle>
     <VersionPrefix>1.0.0</VersionPrefix>
@@ -18,9 +18,6 @@
     <RepositoryUrl>https://github.com/secure-remote-password/srp.net</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\srp.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <DebugType>full</DebugType>
     <RootNamespace>SecureRemotePassword</RootNamespace>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
