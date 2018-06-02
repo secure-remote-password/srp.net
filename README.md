@@ -1,4 +1,6 @@
-﻿# Secure Remote Password for .NET
+﻿<img src="https://raw.githubusercontent.com/secure-remote-password/srp.net/master/images/srp.net.png" width="128" height="128" />
+
+# Secure Remote Password for .NET
 
 [![Appveyor](https://img.shields.io/appveyor/ci/yallie/srp-net.svg)](https://ci.appveyor.com/project/yallie/srp-net)
 [![Coverage](https://img.shields.io/codecov/c/github/secure-remote-password/srp.net.svg)](https://codecov.io/gh/secure-remote-password/srp.net)

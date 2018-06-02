@@ -11,6 +11,7 @@
     <AssemblyName>srp</AssemblyName>
     <PackageId>srp</PackageId>
     <PackageTags>srp;srp-6a;security;authentication</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/secure-remote-password/srp.net/master/images/srp.net.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/secure-remote-password/srp.net</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/secure-remote-password/srp.net/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
