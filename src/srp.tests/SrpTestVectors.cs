@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Zyan.SecureRemotePassword.Tests
+namespace SecureRemotePassword.Tests
 {
 	using TestClass = TestFixtureAttribute;
 	using TestMethod = TestAttribute;
@@ -33,8 +33,9 @@ namespace Zyan.SecureRemotePassword.Tests
 
 		private string GetJsonResource(string name)
 		{
+			var nspace = typeof(SrpTestVectors).Namespace;
 			var assembly = typeof(SrpTestVectors).Assembly;
-			var rstream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.TestVectors.{name}.json");
+			var rstream = assembly.GetManifestResourceStream($"{nspace}.TestVectors.{name}.json");
 			using (var streamReader = new StreamReader(rstream))
 			{
 				return streamReader.ReadToEnd();

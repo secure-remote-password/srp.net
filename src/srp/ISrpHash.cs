@@ -1,4 +1,4 @@
-﻿namespace Zyan.SecureRemotePassword
+﻿namespace SecureRemotePassword
 {
 	/// <summary>
 	/// Hash function signature.

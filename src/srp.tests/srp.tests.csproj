@@ -2,21 +2,22 @@
 
   <PropertyGroup>
     <TargetFrameworks>net35;net461;netcoreapp2.0</TargetFrameworks>
-    <AssemblyName>Zyan.SecureRemotePassword.Tests</AssemblyName>
+    <AssemblyName>srp.tests</AssemblyName>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Zyan.SecureRemotePassword.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\srp.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <DebugType>full</DebugType>
+    <RootNamespace>SecureRemotePassword.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zyan.SecureRemotePassword\Zyan.SecureRemotePassword.csproj" />
+    <ProjectReference Include="..\srp\srp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

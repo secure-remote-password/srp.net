@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using NUnit.Framework;
 
-namespace Zyan.SecureRemotePassword.Tests
+namespace SecureRemotePassword.Tests
 {
 	using TestClass = TestFixtureAttribute;
 	using TestMethod = TestAttribute;

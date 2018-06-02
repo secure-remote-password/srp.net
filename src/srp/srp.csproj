@@ -3,24 +3,26 @@
   <PropertyGroup>
     <Description>SRP-6a protocol implementation</Description>
     <Copyright>Copyright © 2018 Alexey Yakovlev</Copyright>
-    <AssemblyTitle>Zyan.SecureRemotePassword</AssemblyTitle>
+    <AssemblyTitle>srp</AssemblyTitle>
     <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Alexey Yakovlev</Authors>
     <TargetFrameworks>net35;net40;net45;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Zyan.SecureRemotePassword</AssemblyName>
-    <PackageId>Zyan.SecureRemotePassword</PackageId>
-    <PackageTags>SRP;SRP-6a;security;authentication</PackageTags>
-    <PackageProjectUrl>https://github.com/secure-remote-password/dotnet-srp</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/secure-remote-password/dotnet-srp/blob/master/LICENSE</PackageLicenseUrl>
+    <AssemblyName>srp</AssemblyName>
+    <PackageId>srp</PackageId>
+    <PackageTags>srp;srp-6a;security;authentication</PackageTags>
+    <PackageProjectUrl>https://github.com/secure-remote-password/srp.net</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/secure-remote-password/srp.net/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/secure-remote-password/dotnet-srp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/secure-remote-password/srp.net</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Zyan.SecureRemotePassword.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\srp.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <DebugType>full</DebugType>
+    <RootNamespace>SecureRemotePassword</RootNamespace>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net35'">

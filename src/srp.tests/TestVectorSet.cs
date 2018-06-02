@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Zyan.SecureRemotePassword.Tests
+namespace SecureRemotePassword.Tests
 {
 	/// <summary>
 	/// Describes the set of test vectors for the Srp validation.

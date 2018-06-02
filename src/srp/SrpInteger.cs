@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
-namespace Zyan.SecureRemotePassword
+namespace SecureRemotePassword
 {
 	/// <summary>
 	/// A thin wrapper over the <see cref="BigInteger"/> class

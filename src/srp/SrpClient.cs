@@ -1,6 +1,6 @@
 ﻿using System.Security;
 
-namespace Zyan.SecureRemotePassword
+namespace SecureRemotePassword
 {
 	/// <summary>
 	/// Client-side code of the SRP-6a protocol.

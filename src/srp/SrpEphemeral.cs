@@ -1,4 +1,4 @@
-﻿namespace Zyan.SecureRemotePassword
+﻿namespace SecureRemotePassword
 {
 	/// <summary>
 	/// Ephemeral values used during the SRP-6a authentication.

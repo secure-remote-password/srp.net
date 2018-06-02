@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Zyan.SecureRemotePassword
+namespace SecureRemotePassword
 {
 	/// <summary>
 	/// Hashing algorithms for the SRP-6a protocol.

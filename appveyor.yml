@@ -1,17 +1,17 @@
 version: 1.0.{build}
-clone_folder: c:\projects\dotnet-srp
+clone_folder: c:\projects\srp.net
 image: Visual Studio 2017
 
 install:
 - git submodule update --init --recursive
 
 before_build:
-- nuget restore src\Zyan.SecureRemotePassword.sln
+- nuget restore src\srp.sln
 - choco install opencover.portable
 - choco install codecov
 
 build:
-  project: src\Zyan.SecureRemotePassword.sln
+  project: src\srp.sln
   parallel: true
   verbosity: minimal
 
@@ -20,10 +20,10 @@ before_test:
 - where nunit-console.exe
 
 test_script: 
-- vstest.console.exe /logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net35\Zyan.SecureRemotePassword.Tests.dll
-- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\net461\Zyan.SecureRemotePassword.Tests.dll" -filter:"+[*]* -[MemoDb]*" -output:".\SrpNet461.xml"
-- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\dotnet-srp\src\Zyan.SecureRemotePassword.Tests\bin\Debug\netcoreapp2.0\Zyan.SecureRemotePassword.Tests.dll" -output:".\SrpNetCore20.xml"
+- vstest.console.exe /logger:Appveyor C:\projects\srp.net\src\srp.tests\bin\Debug\net35\srp.tests.dll
+- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\srp.net\src\srp.tests\bin\Debug\net461\srp.tests.dll" -filter:"+[*]* -[MemoDb]*" -output:".\srp.net461.xml"
+- OpenCover.Console.exe -returntargetcode -register:user -target:"vstest.console.exe" -targetargs:"/logger:Appveyor C:\projects\srp.net\src\srp.tests\bin\Debug\netcoreapp2.0\srp.tests.dll" -output:".\srp.netcore20.xml"
 
 after_test:
-- codecov -f "SrpNet461.xml"
-- codecov -f "SrpNetCore20.xml"
+- codecov -f "srp.net461.xml"
+- codecov -f "srp.netcore20.xml"
