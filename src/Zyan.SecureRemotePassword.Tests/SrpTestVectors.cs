@@ -18,6 +18,9 @@ namespace Zyan.SecureRemotePassword.Tests
 		[TestMethod]
 		public void VerifyTestVectorsRfc5054() => VerifyTestVectors("rfc5054");
 
+		[TestMethod]
+		public void VerifyTestVectorsSrptools() => VerifyTestVectors("srptools");
+
 		private void VerifyTestVectors(string fileName)
 		{
 			var json = GetJsonResource(fileName);
