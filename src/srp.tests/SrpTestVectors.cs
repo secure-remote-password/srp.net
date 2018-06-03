@@ -6,19 +6,16 @@ using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
-	using TestClass = TestFixtureAttribute;
-	using TestMethod = TestAttribute;
-
 	/// <summary>
 	/// Test class for SRP-6a protocol implementation.
-	///</summary>
-	[TestClass]
+	/// </summary>
+	[TestFixture]
 	public class SrpTestVectors
 	{
-		[TestMethod]
+		[Test]
 		public void VerifyTestVectorsRfc5054() => VerifyTestVectors("rfc5054");
 
-		[TestMethod]
+		[Test]
 		public void VerifyTestVectorsSrptools() => VerifyTestVectors("srptools");
 
 		private void VerifyTestVectors(string fileName)
@@ -129,7 +126,7 @@ namespace SecureRemotePassword.Tests
 			}
 		}
 
-		[TestMethod]
+		[Test]
 		public void HardcodedVersionOfRfc5054TestVector()
 		{
 			// https://www.ietf.org/rfc/rfc5054.txt

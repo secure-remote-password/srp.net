@@ -1,20 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Linq;
 using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
-	using TestClass = TestFixtureAttribute;
-	using TestMethod = TestAttribute;
-
 	/// <summary>
 	/// <see cref="SrpInteger"/> tests.
-	///</summary>
-	[TestClass]
+	/// </summary>
+	[TestFixture]
 	public class SrpIntegerTests
 	{
-		[TestMethod]
+		[Test]
 		public void SrpIntegerToString()
 		{
 			var si = new SrpInteger("2");
@@ -25,7 +20,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual("<SrpInteger: 0d4c7f8a2b32c11b...>", si.ToString());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerFromHexToHex()
 		{
 			var si = SrpInteger.FromHex("02");
@@ -44,7 +39,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual("00000a", SrpInteger.FromHex("00000a").ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerNormalizedLength()
 		{
 			var hex = SrpInteger.FromHex(@"
@@ -58,7 +53,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(256, hex.Length);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerNegativeNumbers()
 		{
 			var srp = SrpInteger.FromHex("-f34");
@@ -68,42 +63,42 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual("-fab5", srp.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerAdd()
 		{
 			var result = SrpInteger.FromHex("353") + SrpInteger.FromHex("181");
 			Assert.AreEqual("4d4", result.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerSubtract()
 		{
 			var result = SrpInteger.FromHex("5340") - SrpInteger.FromHex("5181");
 			Assert.AreEqual("01bf", result.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerMultiply()
 		{
 			var result = SrpInteger.FromHex("CAFE") * SrpInteger.FromHex("babe");
 			Assert.AreEqual("94133484", result.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerDivide()
 		{
 			var result = SrpInteger.FromHex("faced") / SrpInteger.FromHex("BABE");
 			Assert.AreEqual("00015", result.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerModulo()
 		{
 			var result = SrpInteger.FromHex("10") % SrpInteger.FromHex("9");
 			Assert.AreEqual("07", result.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerXor()
 		{
 			var left = SrpInteger.FromHex("32510bfbacfbb9befd54415da243e1695ecabd58c519cd4bd90f1fa6ea5ba47b01c909ba7696cf606ef40c04afe1ac0aa8148dd066592ded9f8774b529c7ea125d298e8883f5e9305f4b44f915cb2bd05af51373fd9b4af511039fa2d96f83414aaaf261bda2e97b170fb5cce2a53e675c154c0d9681596934777e2275b381ce2e40582afe67650b13e72287ff2270abcf73bb028932836fbdecfecee0a3b894473c1bbeb6b4913a536ce4f9b13f1efff71ea313c8661dd9a4ce");
@@ -114,17 +109,16 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(xor, result);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegetModPowCompatibleWithJsbn()
 		{
 			// jsbn results:
 			//  5 ^ 3 % 1000 =  <SRPInteger 7d>  = 125
 			// -5 ^ 3 % 1000 =  <SRPInteger f83> = 0x1000-0x7d
-			// 5 ^ 33 % 1000 =  <SRPInteger 2bd> = 701
-			//-5 ^ 33 % 1000 =  <SRPInteger d43> = 0x1000-0x2bd,
-			// 5 ^ 90 % 1000 =  <SRPInteger dc1>
-			//-5 ^ 90 % 1000 =  <SRPInteger dc1>
-
+			//  5 ^ 33 % 1000 =  <SRPInteger 2bd> = 701
+			// -5 ^ 33 % 1000 =  <SRPInteger d43> = 0x1000-0x2bd,
+			//  5 ^ 90 % 1000 =  <SRPInteger dc1>
+			// -5 ^ 90 % 1000 =  <SRPInteger dc1>
 			var p5 = SrpInteger.FromHex("5");
 			var n5 = SrpInteger.FromHex("-5");
 			var x3 = SrpInteger.FromHex("3");
@@ -151,7 +145,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual("0dc1", result.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerModPowRegressionTest()
 		{
 			var p = new SrpParameters();
@@ -164,9 +158,10 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual("07be00c7e6aa8198eddc42cc2f251901f3bc05795fefd5f40f90f0a6bfe66743954ef18ece62d229095a704197be18c0d1ca3a280381c8a53b42173df36867c29c564e8c974cf4ff4718547d27bd9c08eb9a909fb984e8e23a109eaf4f57a337c9cbe1609e35b9fddbc9f847825b1c37167cb3f10b3b284a7370323818571e6369e91b4ac6f6eedcdbc1c7d8d57b2020d43be7fec3df14a120c76d27ebabc8d93cdc555362a4c7c08a1052e67647e9f3f879846389672e7a5d6e1ff93940d4196bef451e8d6a3b410a5062ac29cee3783e9a5aeac9724ad1375a2189c3b5a8dbf671dfad990132d2e5b73eb5a2e3d2034b6b908210f5fe61272b2cf4d1e3a4aa", A.ToHex());
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerEqualityChecks()
 		{
+			#pragma warning disable SA1131 // Use readable conditions
 			Assert.AreEqual(SrpInteger.FromHex("0"), SrpInteger.Zero);
 			Assert.IsTrue(SrpInteger.FromHex("0") == SrpInteger.Zero);
 			Assert.IsTrue(0 == SrpInteger.Zero);
@@ -180,9 +175,10 @@ namespace SecureRemotePassword.Tests
 			Assert.IsTrue(SrpInteger.Zero != 1);
 			Assert.IsTrue(1L != SrpInteger.Zero);
 			Assert.IsTrue(SrpInteger.Zero != 1L);
+			#pragma warning restore SA1131 // Use readable conditions
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerImplicitStringConversion()
 		{
 			var si = SrpInteger.FromHex("02");
@@ -194,7 +190,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(sistr, "000000000000");
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpIntegerToByteArrayConversion()
 		{
 			var si = SrpInteger.FromHex("02");
@@ -214,7 +210,7 @@ namespace SecureRemotePassword.Tests
 			Assert.IsTrue(Enumerable.SequenceEqual(arr, si.ToByteArray()));
 		}
 
-		[TestMethod]
+		[Test]
 		public void RandomIntegerReturnsAnIntegerOfTheGivenSize()
 		{
 			var rnd = SrpInteger.RandomInteger(1);

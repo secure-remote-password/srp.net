@@ -36,7 +36,8 @@ namespace SecureRemotePassword.Tests
 			public string M1 { get; set; }
 			public string M2 { get; set; }
 
-			private SrpParameters CreateParameters<T>() where T : HashAlgorithm
+			private SrpParameters CreateParameters<T>()
+				where T : HashAlgorithm
 			{
 				// convert size in bits to padded length in chars
 				return SrpParameters.Create<T>(N, g, paddedLength: Size / 4);

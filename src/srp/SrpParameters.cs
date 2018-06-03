@@ -58,43 +58,50 @@ namespace SecureRemotePassword
 		/// Creates the SRP-6a parameters using the specified hash function and 1024-bit group.
 		/// </summary>
 		/// <typeparam name="T"><see cref="HashAlgorithm"/> implementation.</typeparam>
-		public static SrpParameters Create1024<T>() where T : HashAlgorithm => Create<T>(SafePrime1024);
+		public static SrpParameters Create1024<T>()
+			where T : HashAlgorithm => Create<T>(SafePrime1024);
 
 		/// <summary>
 		/// Creates the SRP-6a parameters using the specified hash function and 1536-bit group.
 		/// </summary>
 		/// <typeparam name="T"><see cref="HashAlgorithm"/> implementation.</typeparam>
-		public static SrpParameters Create1536<T>() where T : HashAlgorithm => Create<T>(SafePrime1536);
+		public static SrpParameters Create1536<T>()
+			where T : HashAlgorithm => Create<T>(SafePrime1536);
 
 		/// <summary>
 		/// Creates the SRP-6a parameters using the specified hash function and 2048-bit group.
 		/// </summary>
 		/// <typeparam name="T"><see cref="HashAlgorithm"/> implementation.</typeparam>
-		public static SrpParameters Create2048<T>() where T : HashAlgorithm => Create<T>(SafePrime2048);
+		public static SrpParameters Create2048<T>()
+			where T : HashAlgorithm => Create<T>(SafePrime2048);
 
 		/// <summary>
 		/// Creates the SRP-6a parameters using the specified hash function and 3072-bit group.
 		/// </summary>
 		/// <typeparam name="T"><see cref="HashAlgorithm"/> implementation.</typeparam>
-		public static SrpParameters Create3072<T>() where T : HashAlgorithm => Create<T>(SafePrime3072, "05");
+		public static SrpParameters Create3072<T>()
+			where T : HashAlgorithm => Create<T>(SafePrime3072, "05");
 
 		/// <summary>
 		/// Creates the SRP-6a parameters using the specified hash function and 4096-bit group.
 		/// </summary>
 		/// <typeparam name="T"><see cref="HashAlgorithm"/> implementation.</typeparam>
-		public static SrpParameters Create4096<T>() where T : HashAlgorithm => Create<T>(SafePrime4096, "05");
+		public static SrpParameters Create4096<T>()
+			where T : HashAlgorithm => Create<T>(SafePrime4096, "05");
 
 		/// <summary>
 		/// Creates the SRP-6a parameters using the specified hash function and 6144-bit group.
 		/// </summary>
 		/// <typeparam name="T"><see cref="HashAlgorithm"/> implementation.</typeparam>
-		public static SrpParameters Create6144<T>() where T : HashAlgorithm => Create<T>(SafePrime6144, "05");
+		public static SrpParameters Create6144<T>()
+			where T : HashAlgorithm => Create<T>(SafePrime6144, "05");
 
 		/// <summary>
 		/// Creates the SRP-6a parameters using the specified hash function and 8192-bit group.
 		/// </summary>
 		/// <typeparam name="T"><see cref="HashAlgorithm"/> implementation.</typeparam>
-		public static SrpParameters Create8192<T>() where T : HashAlgorithm => Create<T>(SafePrime8192, "13");
+		public static SrpParameters Create8192<T>()
+			where T : HashAlgorithm => Create<T>(SafePrime8192, "13");
 
 		// prime numbers listed in RFC5054, see https://www.ietf.org/rfc/rfc5054.txt
 		private const string SafePrime1024 = @"
@@ -262,7 +269,7 @@ namespace SecureRemotePassword
 		public SrpHash H => Hasher.HashFunction;
 
 		/// <summary>
-		/// Pads the specified integer value.
+		/// Gets the function to pad the specified integer value.
 		/// </summary>
 		public Func<SrpInteger, SrpInteger> PAD { get; }
 

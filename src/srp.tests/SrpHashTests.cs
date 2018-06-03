@@ -5,19 +5,16 @@ using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
-	using TestClass = TestFixtureAttribute;
-	using TestMethod = TestAttribute;
-
 	/// <summary>
 	/// <see cref="SrpHash"/> tests.
-	///</summary>
-	[TestClass]
+	/// </summary>
+	[TestFixture]
 	public class SrpHashTests
 	{
-		[TestMethod]
+		[Test]
 		public void SrpHashComputesValidStringHashes()
 		{
-			var parts = new[] { "D4C7F8A2B32", "C11B8FBA9581EC4BA4F1B0421", "", "5642EF7355E37C0FC0443EF7", "56EA2C6B8EEB755A1C72302", "7663CAA265EF785B8FF6A9B35227A52D86633DBDFCA43" };
+			var parts = new[] { "D4C7F8A2B32", "C11B8FBA9581EC4BA4F1B0421", string.Empty, "5642EF7355E37C0FC0443EF7", "56EA2C6B8EEB755A1C72302", "7663CAA265EF785B8FF6A9B35227A52D86633DBDFCA43" };
 			var sample = string.Concat(parts);
 			var srpint = SrpInteger.FromHex(sample);
 
@@ -43,7 +40,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(512 / 8, new SrpHash<SHA512>().HashSizeBytes);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpHashComputesValidSrpIntegerHashes()
 		{
 			var parts = new[] { "Hello", " ", "world!" };

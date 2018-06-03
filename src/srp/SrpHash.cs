@@ -9,7 +9,9 @@ namespace SecureRemotePassword
 	/// <summary>
 	/// Hashing algorithms for the SRP-6a protocol.
 	/// </summary>
-	public class SrpHash<T> : ISrpHash where T : HashAlgorithm
+	/// <typeparam name="T">Hash algorithm type.</typeparam>
+	public class SrpHash<T> : ISrpHash
+		where T : HashAlgorithm
 	{
 		/// <summary>
 		/// Gets the hash function.
@@ -42,14 +44,14 @@ namespace SecureRemotePassword
 			var hash = Hasher.ComputeHash(data);
 
 			// reverse the byte order for the little-endian encoding — doesn't take the sign into account
-			//return SrpInteger.FromBytes(hash.Reverse().ToArray());
+			// return SrpInteger.FromBytes(hash.Reverse().ToArray());
 
 			// should yield the same result:
 			var hex = hash.Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2")), sb => sb.ToString());
 			return SrpInteger.FromHex(hex);
 		}
 
-		private static byte[] EmptyBuffer = new byte[0];
+		private static byte[] EmptyBuffer { get; } = new byte[0];
 
 		private static byte[] GetBytes(object obj)
 		{

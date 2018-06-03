@@ -47,7 +47,7 @@ namespace SecureRemotePassword
 			Regex.Replace(hexNumber ?? string.Empty, @"[\s_]", string.Empty);
 
 		/// <summary>
-		/// The <see cref="SrpInteger"/> value representing 0.
+		/// Gets the <see cref="SrpInteger"/> value representing 0.
 		/// </summary>
 		public static SrpInteger Zero { get; } = new SrpInteger();
 

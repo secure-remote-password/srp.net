@@ -137,7 +137,7 @@ namespace SecureRemotePassword
 			var k = Parameters.K;
 
 			// S = (B - kg^x) ^ (a + ux)
-			return (B - (k * (g.ModPow(x, N)))).ModPow(a + (u * x), N);
+			return (B - (k * g.ModPow(x, N))).ModPow(a + (u * x), N);
 		}
 
 		/// <summary>

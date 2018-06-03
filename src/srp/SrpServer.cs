@@ -56,7 +56,7 @@ namespace SecureRemotePassword
 			var v = SrpInteger.FromHex(verifier);
 
 			// B = kv + g^b (b = random number)
-			return (k * v + g.ModPow(b, N)) % N;
+			return ((k * v) + g.ModPow(b, N)) % N;
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace SecureRemotePassword
 			var v = SrpInteger.FromHex(verifier);
 
 			// B = kv + g^b (b = random number)
-			var B = (k * v + g.ModPow(b, N)) % N;
+			var B = ((k * v) + g.ModPow(b, N)) % N;
 
 			// A % N > 0
 			if (A % N == 0)

@@ -21,7 +21,12 @@
     <DebugType>full</DebugType>
     <RootNamespace>SecureRemotePassword</RootNamespace>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <CodeAnalysisRuleSet>..\srp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net35'">
     <Compile Remove="System/BigIntegerFx3.cs" />

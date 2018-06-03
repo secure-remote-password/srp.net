@@ -3,16 +3,13 @@ using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
-	using TestClass = TestFixtureAttribute;
-	using TestMethod = TestAttribute;
-
 	/// <summary>
 	/// <see cref="SrpServer"/> tests.
 	///</summary>
-	[TestClass]
+	[TestFixture]
 	public class SrpServerTests
 	{
-		[TestMethod]
+		[Test]
 		public void SrpServerGeneratesEphemeralValue()
 		{
 			var verifier = "622dad56d6c282a949f9d2702941a9866b7dd277af92a6e538b2d7cca42583275a2f4b64bd61369a24b23170223faf212e2f3bdddc529204c61055687c4162aa2cd0fd41ced0186406b8a6dda4802fa941c54f5115ca69953a8e265210349a4cb89dda3febc96c86df08a87823235ff6c87a170cc1618f38ec493e758e2cac4c04db3dcdac8656458296dbcc3599fc1f66cde1e62e477dd1696c65dbeb413d8ed832adc7304e68566b46a7849126eea62c95d5561306f76fe1f8a77a3bd85db85e6b0262064d665890ff46170f96ce403a9b485abe387e91ca85e3522d6276e2fff41754d57a71dee6da62aea614725da100631efd7442cf68a294001d8134e9";
@@ -27,7 +24,7 @@ namespace SecureRemotePassword.Tests
 			Assert.IsTrue(ephemeral.Secret.Length < ephemeral.Public.Length);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpServerDeriveSession()
 		{
 			var serverSecretEphemeral = "e252dc34cc300c5f330ae3c684bf1b1657f5b1ca694bbfbba14829bb16e5638c";
@@ -45,7 +42,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(serverSessionProof, serverSession.Proof);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpServerDoesntAcceptInvalidClientEphemeral()
 		{
 			var serverSecretEphemeral = "e252dc34cc300c5f330ae3c684bf1b1657f5b1ca694bbfbba14829bb16e5638c";
@@ -59,7 +56,7 @@ namespace SecureRemotePassword.Tests
 				new SrpServer().DeriveSession(serverSecretEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof));
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpServerDoesntAcceptInvalidClientSessionProof()
 		{
 			var serverSecretEphemeral = "e252dc34cc300c5f330ae3c684bf1b1657f5b1ca694bbfbba14829bb16e5638c";
@@ -73,7 +70,7 @@ namespace SecureRemotePassword.Tests
 				new SrpServer().DeriveSession(serverSecretEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof));
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpServerDeriveSessionRegressionTest1()
 		{
 			var serverSecretEphemeral = "10586d81ccecdce05f7a6ad2ed205b7f5615f84463fdcf584bfec2f288fad5f5";
@@ -91,7 +88,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(serverSessionProof, serverSession.Proof);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpServerDeriveSessionRegressionTest2()
 		{
 			// regression test:

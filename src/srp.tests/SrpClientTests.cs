@@ -4,16 +4,13 @@ using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
-	using TestClass = TestFixtureAttribute;
-	using TestMethod = TestAttribute;
-
 	/// <summary>
 	/// <see cref="SrpClient"/> tests.
 	///</summary>
-	[TestClass]
+	[TestFixture]
 	public class SrpClientTests
 	{
-		[TestMethod]
+		[Test]
 		public void SrpClientGenerateSaltReturnsRandomInteger()
 		{
 			var salt = new SrpClient().GenerateSalt();
@@ -22,7 +19,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(new SrpParameters().HashSizeBytes * 2, salt.Length);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpClientDerivesThePrivateKeyAndVerifier()
 		{
 			// validate intermediate steps
@@ -55,7 +52,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual("622dad56d6c282a949f9d2702941a9866b7dd277af92a6e538b2d7cca42583275a2f4b64bd61369a24b23170223faf212e2f3bdddc529204c61055687c4162aa2cd0fd41ced0186406b8a6dda4802fa941c54f5115ca69953a8e265210349a4cb89dda3febc96c86df08a87823235ff6c87a170cc1618f38ec493e758e2cac4c04db3dcdac8656458296dbcc3599fc1f66cde1e62e477dd1696c65dbeb413d8ed832adc7304e68566b46a7849126eea62c95d5561306f76fe1f8a77a3bd85db85e6b0262064d665890ff46170f96ce403a9b485abe387e91ca85e3522d6276e2fff41754d57a71dee6da62aea614725da100631efd7442cf68a294001d8134e9", verifier);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpClientGeneratesEphemeralValue()
 		{
 			var ephemeral = new SrpClient().GenerateEphemeral();
@@ -69,7 +66,7 @@ namespace SecureRemotePassword.Tests
 			Assert.IsTrue(ephemeral.Secret.Length < ephemeral.Public.Length);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpClientDeriveSession()
 		{
 			var clientEphemeralSecret = "27b282fc8fbf8d8a5a075ff4992406ec730bc80eea2f9b89a75bb95f1272265e";
@@ -86,7 +83,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(clientSessionProof, clientSession.Proof);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpClientDoesntAcceptZeroB()
 		{
 			var clientEphemeralSecret = "27b282fc8fbf8d8a5a075ff4992406ec730bc80eea2f9b89a75bb95f1272265e";
@@ -99,7 +96,7 @@ namespace SecureRemotePassword.Tests
 				new SrpClient().DeriveSession(clientEphemeralSecret, serverEphemeralPublic, salt, username, privateKey));
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpClientDeriveSessionRegressionTest()
 		{
 			var clientEphemeralSecret = "72dac3f6f7ade13135e234d9d3c4899453418c929af72c4171ffdc920fcf2535";
@@ -116,7 +113,7 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(clientSessionProof, clientSession.Proof);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpClientVerifiesSession()
 		{
 			var clientEphemeralPublic = "30fca5854c2391faa219fd863487c31f2591f5ba9988ce5129319906929ff2d23bc4e24c3f36f6ed12034111881ca705b033edfb782a1714e0f4d892f17c7d8432a1089c311c3170848bba0a0f64930d3f097c670b08384f1641a73833edaf9d1493744e655043df0d68f0c18a1571cc1c07c41ad817b57c262f48dde991d413628c0f3fa1de55afcf2d87e994c7f6e25c07cf1a803d41f555158997cd8703da68a48e54598b5b4947cc661d5c0138a5ecaa55996d5d6b566578f9de3b1ca1e128ff223c290595252497835646b9f8c0e330f4d6a3e61f31ff3eb8e305f563cb112ca90942e770f94cd02396041ab4c47e0c58675ded8bb0026640f9723b4d67";
@@ -132,7 +129,7 @@ namespace SecureRemotePassword.Tests
 			new SrpClient().VerifySession(clientEphemeralPublic, clientSession, serverSessionProof);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SrpClientDoesntAcceptWrongSessionProof()
 		{
 			var clientEphemeralPublic = "30fca5854c2391faa219fd863487c31f2591f5ba9988ce5129319906929ff2d23bc4e24c3f36f6ed12034111881ca705b033edfb782a1714e0f4d892f17c7d8432a1089c311c3170848bba0a0f64930d3f097c670b08384f1641a73833edaf9d1493744e655043df0d68f0c18a1571cc1c07c41ad817b57c262f48dde991d413628c0f3fa1de55afcf2d87e994c7f6e25c07cf1a803d41f555158997cd8703da68a48e54598b5b4947cc661d5c0138a5ecaa55996d5d6b566578f9de3b1ca1e128ff223c290595252497835646b9f8c0e330f4d6a3e61f31ff3eb8e305f563cb112ca90942e770f94cd02396041ab4c47e0c58675ded8bb0026640f9723b4d67";

@@ -4,16 +4,13 @@ using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
-	using TestClass = TestFixtureAttribute;
-	using TestMethod = TestAttribute;
-
 	/// <summary>
 	/// Test class for SRP-6a protocol implementation.
-	///</summary>
-	[TestClass]
+	/// </summary>
+	[TestFixture]
 	public class SrpAuthenticationTests
 	{
-		[TestMethod]
+		[Test]
 		public void SrpShouldAuthenticateAUser()
 		{
 			// default parameters, taken from https://github.com/LinusU/secure-remote-password/blob/master/test.js
@@ -52,7 +49,8 @@ namespace SecureRemotePassword.Tests
 			SrpAuthenticationUsingStandardParameters<MD5>("not-safe", "dont-use");
 		}
 
-		private void SrpAuthenticationUsingStandardParameters<T>(string username, string password) where T : HashAlgorithm
+		private void SrpAuthenticationUsingStandardParameters<T>(string username, string password)
+			where T : HashAlgorithm
 		{
 			// test all standard groups using the same hashing algorithm
 			SrpAuthentication(username, password, SrpParameters.Create1024<T>());
