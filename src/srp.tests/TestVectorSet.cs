@@ -62,7 +62,8 @@ namespace SecureRemotePassword.Tests
 						return CreateParameters<SHA512>();
 
 					default:
-						throw new InvalidOperationException($"Unknown hash format: {H}");
+						// unknown hash format
+						return null;
 				}
 			}
 		}

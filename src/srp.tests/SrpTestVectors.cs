@@ -46,6 +46,12 @@ namespace SecureRemotePassword.Tests
 		{
 			// prepare parameters
 			var parameters = testVector.CreateParameters();
+			if (parameters == null)
+			{
+				// not supported hash function
+				return;
+			}
+
 			var N = parameters.N;
 			var g = parameters.G;
 			var H = parameters.H;
