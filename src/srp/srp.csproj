@@ -6,7 +6,7 @@
     <AssemblyTitle>srp</AssemblyTitle>
     <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Alexey Yakovlev</Authors>
-    <TargetFrameworks>net35;net40;net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;netstandard1.6;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>srp</AssemblyName>
     <PackageId>srp</PackageId>
@@ -30,7 +30,6 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net35'">
     <Compile Remove="System/BigIntegerFx3.cs" />
-    <Compile Remove="System/ConcurrentDictionaryFx3.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
@@ -52,20 +51,24 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);USE_CRYPTO_CONFIG</DefineConstants>
     <FrameworkPathOverride>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <DefineConstants>$(DefineConstants);STRING_JOIN_ENUMERABLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);USE_CRYPTO_CONFIG</DefineConstants>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE;STRING_JOIN_ENUMERABLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);USE_CRYPTO_CONFIG</DefineConstants>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);USE_CRYPTO_CONFIG</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">

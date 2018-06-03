@@ -12,6 +12,38 @@ namespace SecureRemotePassword.Tests
 	public class SrpHashTests
 	{
 		[Test]
+		public void CreateHasherTests()
+		{
+			var sha1 = SrpHash<SHA1>.CreateHasher();
+			Assert.NotNull(sha1);
+
+			var sha256 = SrpHash<SHA256>.CreateHasher();
+			Assert.NotNull(sha256);
+
+			var sha384 = SrpHash<SHA384>.CreateHasher();
+			Assert.NotNull(sha384);
+
+			var sha512 = SrpHash<SHA512>.CreateHasher();
+			Assert.NotNull(sha512);
+		}
+
+		[Test]
+		public void CreateHasherByNameTests()
+		{
+			var sha1 = SrpHashTools.CreateHasher("sha1");
+			Assert.NotNull(sha1);
+
+			var sha256 = SrpHashTools.CreateHasher("sha256");
+			Assert.NotNull(sha256);
+
+			var sha384 = SrpHashTools.CreateHasher("sha384");
+			Assert.NotNull(sha384);
+
+			var sha512 = SrpHashTools.CreateHasher("sha512");
+			Assert.NotNull(sha512);
+		}
+
+		[Test]
 		public void SrpHashComputesValidStringHashes()
 		{
 			var parts = new[] { "D4C7F8A2B32", "C11B8FBA9581EC4BA4F1B0421", string.Empty, "5642EF7355E37C0FC0443EF7", "56EA2C6B8EEB755A1C72302", "7663CAA265EF785B8FF6A9B35227A52D86633DBDFCA43" };

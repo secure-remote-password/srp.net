@@ -7,7 +7,7 @@
 [![Tests](https://img.shields.io/appveyor/tests/yallie/srp-net.svg)](https://ci.appveyor.com/project/yallie/srp-net/build/tests)
 [![NuGet](https://img.shields.io/nuget/v/srp.svg)](https://www.nuget.org/packages/srp)
 
-A modern [SRP-6a](http://srp.stanford.edu) implementation for .NET Standard 2.0 and .NET Framework 3.5+.  
+A modern [SRP-6a](http://srp.stanford.edu) implementation for .NET Standard 1.6+ and .NET Framework 3.5+.  
 Based on and is compatible with [secure-remote-password](https://npmjs.com/package/secure-remote-password) npm package by [Linus Unnebäck](https://github.com/LinusU/secure-remote-password).
 
 ## Installation

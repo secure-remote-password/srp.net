@@ -84,7 +84,7 @@ namespace SecureRemotePassword
 
 			var random = RandomNumberGenerator.Create();
 			var randomBytes = new byte[bytes];
-			random.GetNonZeroBytes(randomBytes);
+			random.GetBytes(randomBytes);
 
 			// make sure random number is positive
 			var result = FromBytes(randomBytes);

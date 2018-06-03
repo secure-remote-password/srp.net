@@ -33,11 +33,10 @@ namespace SecureRemotePassword
 
 		private static T Hasher { get; } = CreateHasher();
 
-		private static T CreateHasher()
-		{
-			var algorithm = typeof(T).FullName;
-			return (T)CryptoConfig.CreateFromName(algorithm);
-		}
+		/// <summary>
+		/// Creates the hasher of the given type <typeparamref name="T"/>.
+		/// </summary>
+		public static T CreateHasher() => (T)SrpHashTools.CreateHasher(typeof(T).Name);
 
 		private static SrpInteger ComputeHash(byte[] data)
 		{
