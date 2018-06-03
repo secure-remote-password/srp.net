@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.Cryptography;
 using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
@@ -208,6 +209,37 @@ namespace SecureRemotePassword.Tests
 			si = new SrpInteger("B0", 10);
 			arr = new byte[] { 0, 0, 0, 0, 0xb0 };
 			Assert.IsTrue(Enumerable.SequenceEqual(arr, si.ToByteArray()));
+		}
+
+		[Test]
+		public void SrpIntegerFromBytes()
+		{
+			var si = SrpInteger.FromByteArray(new byte[] { 0x12 });
+			Assert.AreEqual("12", si.ToHex());
+
+			si = SrpInteger.FromByteArray(new byte[] { 0xff });
+			Assert.AreEqual("ff", si.ToHex());
+
+			si = SrpInteger.FromByteArray(new byte[] { 0x12, 0x34 });
+			Assert.AreEqual("1234", si.ToHex());
+
+			si = SrpInteger.FromByteArray(new byte[] { 0xfa, 0xc3 });
+			Assert.AreEqual("fac3", si.ToHex());
+		}
+
+		[Test]
+		public void SrpIntegerFromToByteArrayRoundtrip()
+		{
+			var expected = new byte[] { 0xff, 1, 2, 3, 4, 5, 0xca, 0xfe, 0xba, 0xbe };
+			var si = SrpInteger.FromByteArray(expected);
+			var actual = si.ToByteArray();
+			Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
+
+			expected = new byte[512];
+			RandomNumberGenerator.Create().GetBytes(expected);
+			si = SrpInteger.FromByteArray(expected);
+			actual = si.ToByteArray();
+			Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
 		}
 
 		[Test]

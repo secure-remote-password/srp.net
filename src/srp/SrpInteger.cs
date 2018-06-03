@@ -87,7 +87,7 @@ namespace SecureRemotePassword
 			random.GetBytes(randomBytes);
 
 			// make sure random number is positive
-			var result = FromBytes(randomBytes);
+			var result = FromByteArray(randomBytes);
 			if (result.Value < 0)
 			{
 				result.Value = -result.Value;
@@ -290,19 +290,30 @@ namespace SecureRemotePassword
 		}
 
 		/// <summary>
-		/// Returns a new <see cref="SrpInteger"/> instance from the given hexadecimal string.
+		/// Returns a new <see cref="SrpInteger"/> instance from the given array of bytes.
 		/// </summary>
 		/// <param name="bytes">The array of bytes.</param>
-		public static SrpInteger FromBytes(byte[] bytes)
+		public static SrpInteger FromByteArray(byte[] bytes)
 		{
 			if (bytes == null || bytes.Length == 0)
 			{
 				return Zero;
 			}
 
+			// convert to little-endian for BigInteger
+			bytes = bytes.ToArray();
+			Array.Reverse(bytes);
+
+			// handle negative values
+			var value = new BigInteger(bytes);
+			if (value < 0)
+			{
+				value = (BigInteger.One << (bytes.Length * 8)) + value;
+			}
+
 			return new SrpInteger
 			{
-				Value = new BigInteger(bytes),
+				Value = value,
 				HexLength = bytes.Length * 2,
 			};
 		}
