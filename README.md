@@ -18,7 +18,119 @@ dotnet add package srp
 
 ## Usage
 
-TODO
+### Signing up
+
+To create an account, a client provides the following three values:
+
+* Identifier (username or email)
+* Salt
+* Verifier
+
+The salt and verifier are calculated as follows:
+
+```c#
+using SecureRemotePassword;
+
+// a user enters his name and password
+var userName = "alice";
+var password = "password123";
+
+var client = new SrpClient();
+var salt = srp.GenerateSalt();
+var privateKey = srp.DerivePrivateKey(salt, userName, password);
+var verifier = srp.DeriveVerifier(privateKey);
+
+// send userName, salt and verifier to server
+```
+
+### Logging in
+
+Authentication involves several steps:
+
+#### 1. Client → Server: I, A
+
+The client generates an ephemeral secret/public value pair and sends the 
+public value and user name to server:
+
+```c#
+using SecureRemotePassword;
+
+// a user enters his name
+var userName = "alice";
+
+var client = new SrpClient();
+var clientEphemeral = client.GenerateEphemeral();
+
+// send userName and clientEphemeral.Public to server
+```
+
+#### 2. Server → Client: s, B
+
+The server retrieves `salt` and `verifier` from the database using the 
+client-provided `userName`. Then it generates its own ephemeral secret/public
+value pair:
+
+```c#
+using SecureRemotePassword;
+
+// retrieved from the database
+var salt = "beb25379...";
+var verifier = "7e273de8...";
+
+var server = new SrpServer();
+var serverEphemeral = server.GenerateEphemeral();
+
+// store serverEphemeral.Secret for later use
+// send salt and serverEphemeral.Public to the client
+```
+
+#### 3. Client → Server: M1
+
+The client derives the shared session key and a proof of it to provide to the server:
+
+```c#
+using SecureRemotePassword;
+
+// a user enters his password
+var password = "password123";
+
+var client = new SrpClient();
+var privateKey = client.DerivePrivateKey(salt, userName, password);
+var clientSession = client.DeriveSession(clientEphemeral.Secret,
+    serverPublicEphemeral, salt, userName, privateKey);
+
+// send clientSession.Proof to the server
+```
+
+#### 4. Server → Client: M2
+
+The server derives the shared session key and verifies that the client has the
+same key using the provided proof value:
+
+```c#
+using SecureRemotePassword;
+
+// get the serverEphemeral.Secret stored in step 2
+var serverSecretEphemeral = "e487cb59...";
+
+var server = new SrpServer();
+var serverSession = server.DeriveSession(serverSecretEphemeral,
+    clientPublicEphemeral, salt, userName, verifier, clientSessionProof);
+
+// send serverSession.Proof to the client
+```
+
+#### 5. Client verifies M2
+
+Finally, the client verifies that the server has derived the same session key
+using the server's proof value:
+
+```c#
+using SecureRemotePassword;
+
+var client = new SrpClient();
+client.VerifySession(clientEphemeral.Public, clientSession, serverSessionProof);
+```
 
 ## Authentication at a glance
 
@@ -42,6 +154,48 @@ client.VerifySession(clientEphemeral.Public, clientSession, serverSession.Proof)
 // both the client and the server have the same session key
 Assert.AreEqual(clientSession.Key, serverSession.Key);
 ```
+
+## Custom protocol parameters
+
+This SRP-6a implementation uses `sha256` hash function and 2048-bit group values
+by default. Any class derived from `HashAlgorithm` can be used as `H`. 
+Customizing the parameters is easy:
+
+```c#
+using System.Security.Cryptography;
+using SecureRemotePassword;
+
+// use predefined 4096-bit group with SHA512 hash function
+var customParams = SrpParameters.Create4096<SHA512>();
+```
+
+`SrpParameters` has helper methods for all predefined groups from RFC5054:
+`Create1024<SHA1>()`, etc.
+
+It's also possible to specify custom values of `N` and `g`:
+
+```c#
+var N = "D4C7F8A2B32C11B8FBA9581EC4BA...";
+var customParams = SrpParameters.Create<SHA1>(N, "02");
+```
+
+Custom SRP parameters are then passed to `SrpClient` and `SrpServer` constructors.
+Make sure to use the same parameters on both sides:
+
+```c#
+var client = new SrpClient(customParams);
+var server = new SrpServer(customParams);
+```
+
+## Compatibility with other implementations
+
+`srp.net` is designed to be compatible with other implementations hosted
+in [secure-remote-password](https://github.com/secure-remote-password/) organization.
+It's also compatible with these libraries:
+
+* Javascript: [secure-remote-password](https://npmjs.com/package/secure-remote-password) npm package by [Linus Unnebäck](https://github.com/LinusU/secure-remote-password)
+* Python: [srptools](https://pypi.org/project/srptools/) by [Igor Starikov](https://github.com/idlesign/srptools)
+* Swift: [SRP for Swift](http://boukehaarsma.nl/SRP/master/) by [Bouke Haarsma](https://github.com/Bouke/SRP)
 
 ## References
 
