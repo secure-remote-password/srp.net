@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
-
-namespace SecureRemotePassword.Tests
+﻿namespace SecureRemotePassword.Tests
 {
 	/// <summary>
 	/// Describes the set of test vectors for the Srp validation.
@@ -36,36 +33,21 @@ namespace SecureRemotePassword.Tests
 			public string M1 { get; set; }
 			public string M2 { get; set; }
 
-			private SrpParameters CreateParameters<T>()
-				where T : HashAlgorithm
-			{
-				// convert size in bits to padded length in chars
-				return SrpParameters.Create<T>(N, g, paddedLength: Size / 4);
-			}
-
 			/// <summary>
 			/// Creates the <see cref="SrpParameters"/> for the current test vector.
 			/// </summary>
 			public SrpParameters CreateParameters()
 			{
-				switch (H.ToLowerInvariant())
+				// skip test vectors with the unsupported hash format
+				var hasher = SrpHash.CreateHasher(H);
+				if (hasher == null)
 				{
-					case "sha1":
-						return CreateParameters<SHA1>();
-
-					case "sha256":
-						return CreateParameters<SHA256>();
-
-					case "sha384":
-						return CreateParameters<SHA384>();
-
-					case "sha512":
-						return CreateParameters<SHA512>();
-
-					default:
-						// unknown hash format
-						return null;
+					return null;
 				}
+
+				// convert size in bits to padded length in chars
+				var paddedLength = Size / 4;
+				return new SrpParameters(hasher, N, g, paddedLength);
 			}
 		}
 	}

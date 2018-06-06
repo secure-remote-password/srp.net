@@ -4,9 +4,11 @@ using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
+	using HashFunc = SrpParameters.SrpHashFunction;
+
 	/// <summary>
 	/// <see cref="SrpClient"/> tests.
-	///</summary>
+	/// </summary>
 	[TestFixture]
 	public class SrpClientTests
 	{
@@ -25,7 +27,7 @@ namespace SecureRemotePassword.Tests
 			// validate intermediate steps
 			var userName = "hacker@example.com";
 			var password = "secret";
-			var H = new SrpHash<SHA256>().HashFunction;
+			HashFunc H = new SrpHash<SHA256>().ComputeHash;
 			var step1 = H($"{userName}:{password}");
 			Assert.AreEqual(SrpInteger.FromHex("ed3250071433e544b62b5dd0341564825a697357b5379f07aabca795a4e0a109"), step1);
 

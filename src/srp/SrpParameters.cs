@@ -9,14 +9,25 @@ namespace SecureRemotePassword
 	public class SrpParameters
 	{
 		/// <summary>
+		/// Hash function signature.
+		/// Computes the hash of the specified <see cref="string"/> or <see cref="SrpInteger"/> values.
+		/// </summary>
+		/// <param name="values">The values.</param>
+		public delegate SrpInteger SrpHashFunction(params object[] values);
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="SrpParameters"/> class.
 		/// </summary>
-		public SrpParameters()
+		/// <param name="hashAlgorithm">The hashing algorithm.</param>
+		/// <param name="largeSafePrime">Large safe prime number N (hexadecimal).</param>
+		/// <param name="generator">The generator value modulo N (hexadecimal).</param>
+		/// <param name="paddedLength">The hexadecimal length of N and g.</param>
+		public SrpParameters(HashAlgorithm hashAlgorithm = null, string largeSafePrime = null, string generator = null, int? paddedLength = null)
 		{
-			N = SrpInteger.FromHex(SafePrime2048);
-			G = SrpInteger.FromHex("02");
-			PaddedLength = N.HexLength.Value;
-			Hasher = new SrpHash<SHA256>();
+			N = SrpInteger.FromHex(largeSafePrime ?? SafePrime2048);
+			G = SrpInteger.FromHex(generator ?? "02");
+			PaddedLength = paddedLength ?? N.HexLength.Value;
+			Hasher = hashAlgorithm != null ? new SrpHash(hashAlgorithm) : new SrpHash<SHA256>();
 			PAD = i => i.Pad(PaddedLength);
 		}
 
@@ -266,7 +277,7 @@ namespace SecureRemotePassword
 		/// <summary>
 		/// Gets the hashing function.
 		/// </summary>
-		public SrpHash H => Hasher.HashFunction;
+		public SrpHashFunction H => Hasher.ComputeHash;
 
 		/// <summary>
 		/// Gets the function to pad the specified integer value.

@@ -5,6 +5,8 @@ using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
 {
+	using H = SrpParameters.SrpHashFunction;
+
 	/// <summary>
 	/// <see cref="SrpHash"/> tests.
 	/// </summary>
@@ -30,16 +32,16 @@ namespace SecureRemotePassword.Tests
 		[Test]
 		public void CreateHasherByNameTests()
 		{
-			var sha1 = SrpHashTools.CreateHasher("sha1");
+			var sha1 = SrpHash.CreateHasher("sha1");
 			Assert.NotNull(sha1);
 
-			var sha256 = SrpHashTools.CreateHasher("sha256");
+			var sha256 = SrpHash.CreateHasher("sha256");
 			Assert.NotNull(sha256);
 
-			var sha384 = SrpHashTools.CreateHasher("sha384");
+			var sha384 = SrpHash.CreateHasher("sha384");
 			Assert.NotNull(sha384);
 
-			var sha512 = SrpHashTools.CreateHasher("sha512");
+			var sha512 = SrpHash.CreateHasher("sha512");
 			Assert.NotNull(sha512);
 		}
 
@@ -50,21 +52,21 @@ namespace SecureRemotePassword.Tests
 			var sample = string.Concat(parts);
 			var srpint = SrpInteger.FromHex(sample);
 
-			var md5 = new SrpHash<MD5>().HashFunction;
+			H md5 = new SrpHash<MD5>().ComputeHash;
 			var hashmd5 = SrpInteger.FromHex("34ada39bbabfa6e663f1aad3d7814121");
 			Assert.AreEqual(hashmd5, md5(srpint.ToHex().ToUpper()));
 			Assert.AreEqual(hashmd5, md5(sample));
 			Assert.AreEqual(hashmd5, md5(parts));
 			Assert.AreEqual(16, new SrpHash<MD5>().HashSizeBytes);
 
-			var sha256 = new SrpHash<SHA256>().HashFunction;
+			H sha256 = new SrpHash<SHA256>().ComputeHash;
 			var hash256 = SrpInteger.FromHex("1767fe8c94508ad3514b8332493fab5396757fe347023fc9d1fef6d26c3a70d3");
 			Assert.AreEqual(hash256, sha256(srpint.ToHex().ToUpper()));
 			Assert.AreEqual(hash256, sha256(sample));
 			Assert.AreEqual(hash256, sha256(parts));
 			Assert.AreEqual(256 / 8, new SrpHash<SHA256>().HashSizeBytes);
 
-			var sha512 = new SrpHash<SHA512>().HashFunction;
+			H sha512 = new SrpHash<SHA512>().ComputeHash;
 			var hash512 = SrpInteger.FromHex("f2406fd4b33b15a6b47ff78ccac7cd80eec7944092425b640d740e7dc695fdd42f583a9b4a4b98ffa5409680181999bfe319f2a3b50ddb111e8405019a8c552a");
 			Assert.AreEqual(hash512, sha512(srpint.ToHex().ToUpper()));
 			Assert.AreEqual(hash512, sha512(sample));
@@ -79,21 +81,21 @@ namespace SecureRemotePassword.Tests
 			var sample = string.Concat(parts);
 			var srpint = SrpInteger.FromHex("48 65 6C 6C 6F 20 77 6F 72 6c 64 21");
 
-			var md5 = new SrpHash<MD5>().HashFunction;
+			H md5 = new SrpHash<MD5>().ComputeHash;
 			var hashmd5 = SrpInteger.FromHex("86FB269D190D2C85F6E0468CECA42A20");
 			Assert.AreEqual(hashmd5, md5(srpint));
 			Assert.AreEqual(hashmd5, md5(sample));
 			Assert.AreEqual(hashmd5, md5(parts));
 			Assert.AreEqual(16, new SrpHash<MD5>().HashSizeBytes);
 
-			var sha256 = new SrpHash<SHA256>().HashFunction;
+			H sha256 = new SrpHash<SHA256>().ComputeHash;
 			var hash256 = SrpInteger.FromHex("C0535E4BE2B79FFD93291305436BF889314E4A3FAEC05ECFFCBB7DF31AD9E51A");
 			Assert.AreEqual(hash256, sha256(srpint));
 			Assert.AreEqual(hash256, sha256(sample));
 			Assert.AreEqual(hash256, sha256(parts));
 			Assert.AreEqual(256 / 8, new SrpHash<SHA256>().HashSizeBytes);
 
-			var sha512 = new SrpHash<SHA512>().HashFunction;
+			H sha512 = new SrpHash<SHA512>().ComputeHash;
 			var hash512 = SrpInteger.FromHex("F6CDE2A0F819314CDDE55FC227D8D7DAE3D28CC556222A0A8AD66D91CCAD4AAD6094F517A2182360C9AACF6A3DC323162CB6FD8CDFFEDB0FE038F55E85FFB5B6");
 			Assert.AreEqual(hash512, sha512(srpint));
 			Assert.AreEqual(hash512, sha512(sample));

@@ -1,21 +1,15 @@
 ﻿namespace SecureRemotePassword
 {
 	/// <summary>
-	/// Hash function signature.
-	/// Computes the hash of the specified <see cref="string"/> or <see cref="SrpInteger"/> values.
-	/// </summary>
-	/// <param name="values">The values.</param>
-	public delegate SrpInteger SrpHash(params object[] values);
-
-	/// <summary>
 	/// Interface for the hash functions used by SRP-6a protocol.
 	/// </summary>
 	public interface ISrpHash
 	{
 		/// <summary>
-		/// Gets the hashing function.
+		/// Computes the hash of the specified <see cref="string"/> or <see cref="SrpInteger"/> values.
 		/// </summary>
-		SrpHash HashFunction { get; }
+		/// <param name="values">The values.</param>
+		SrpInteger ComputeHash(params object[] values);
 
 		/// <summary>
 		/// Gets the hash size in bytes.
