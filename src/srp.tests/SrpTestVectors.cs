@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Net;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using NUnit.Framework;

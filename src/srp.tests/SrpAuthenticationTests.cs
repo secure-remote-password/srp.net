@@ -13,7 +13,7 @@ namespace SecureRemotePassword.Tests
 		[Test]
 		public void SrpShouldAuthenticateAUser()
 		{
-			// default parameters, taken from https://github.com/LinusU/secure-remote-password/blob/master/test.js
+			// default parameters: RFC5054, 2048-bit group
 			SrpAuthentication("linus@folkdatorn.se", "$uper$ecure");
 
 			// sha512, 512-bit prime number

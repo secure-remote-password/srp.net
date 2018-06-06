@@ -1,4 +1,7 @@
-﻿namespace SecureRemotePassword.Tests
+﻿using System.Security.Cryptography;
+using Blake2Sharp;
+
+namespace SecureRemotePassword.Tests
 {
 	/// <summary>
 	/// Describes the set of test vectors for the Srp validation.
@@ -34,12 +37,46 @@
 			public string M2 { get; set; }
 
 			/// <summary>
+			/// Creates the hasher.
+			/// </summary>
+			private HashAlgorithm CreateHasher()
+			{
+				var hasher = SrpHash.CreateHasher(H);
+				if (hasher == null)
+				{
+					HashAlgorithm blake2b(int bits) =>
+						new Blake2BHasher(new Blake2BConfig { OutputSizeInBits = bits })
+							.AsHashAlgorithm();
+
+					switch (H.ToLowerInvariant())
+					{
+						case "blake2s":
+							return null;
+
+						case "blake2b-224":
+							return blake2b(224);
+
+						case "blake2b-256":
+							return blake2b(256);
+
+						case "blake2b-384":
+							return blake2b(384);
+
+						case "blake2b-512":
+							return blake2b(512);
+					}
+				}
+
+				return hasher;
+			}
+
+			/// <summary>
 			/// Creates the <see cref="SrpParameters"/> for the current test vector.
 			/// </summary>
 			public SrpParameters CreateParameters()
 			{
 				// skip test vectors with the unsupported hash format
-				var hasher = SrpHash.CreateHasher(H);
+				var hasher = CreateHasher();
 				if (hasher == null)
 				{
 					return null;
