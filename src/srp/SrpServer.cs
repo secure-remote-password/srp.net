@@ -48,9 +48,9 @@ namespace SecureRemotePassword
 			// N — A large safe prime (N = 2q+1, where q is prime)
 			// g — A generator modulo N
 			// k — Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
-			var N = Parameters.N;
-			var g = Parameters.G;
-			var k = Parameters.K;
+			var N = Parameters.Prime;
+			var g = Parameters.Generator;
+			var k = Parameters.Multiplier;
 
 			// v — Password verifier
 			var v = SrpInteger.FromHex(verifier);
@@ -69,7 +69,7 @@ namespace SecureRemotePassword
 		internal SrpInteger ComputeS(SrpInteger A, SrpInteger b, SrpInteger u, SrpInteger v)
 		{
 			// N — A large safe prime (N = 2q+1, where q is prime)
-			var N = Parameters.N;
+			var N = Parameters.Prime;
 
 			// S = (Av^u) ^ b (computes session key)
 			return (A * v.ModPow(u, N)).ModPow(b, N);
@@ -92,11 +92,11 @@ namespace SecureRemotePassword
 			// k — Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
 			// H — One-way hash function
 			// PAD — Pad the number to have the same number of bytes as N
-			var N = Parameters.N;
-			var g = Parameters.G;
-			var k = Parameters.K;
-			var H = Parameters.H;
-			var PAD = Parameters.PAD;
+			var N = Parameters.Prime;
+			var g = Parameters.Generator;
+			var k = Parameters.Multiplier;
+			var H = Parameters.Hash;
+			var PAD = Parameters.Pad;
 
 			// b — Secret ephemeral values
 			// A — Public ephemeral values

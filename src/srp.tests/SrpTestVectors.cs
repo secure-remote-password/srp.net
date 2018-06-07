@@ -49,12 +49,12 @@ namespace SecureRemotePassword.Tests
 				return;
 			}
 
-			var N = parameters.N;
-			var g = parameters.G;
-			var H = parameters.H;
+			var N = parameters.Prime;
+			var g = parameters.Generator;
+			var H = parameters.Hash;
 
 			// validate the multiplier parameter
-			var k = parameters.K;
+			var k = parameters.Multiplier;
 			var kx = SrpInteger.FromHex(testVector.k);
 			Assert.AreEqual(kx, k);
 
@@ -137,8 +137,8 @@ namespace SecureRemotePassword.Tests
 				FD5138FE 8376435B 9FC61D2F C0EB06E3");
 			var g = SrpInteger.FromHex("02");
 			var p = SrpParameters.Create<SHA1>(N, g);
-			var H = p.H;
-			var k = p.K;
+			var H = p.Hash;
+			var k = p.Multiplier;
 			var kx = SrpInteger.FromHex(@"7556AA04 5AEF2CDD 07ABAF0F 665C3E81 8913186F");
 			Assert.AreEqual(kx, k);
 

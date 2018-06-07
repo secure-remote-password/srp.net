@@ -10,8 +10,8 @@ namespace SecureRemotePassword.Tests
 		public void SrpParameterDefaultsAreReasonable()
 		{
 			var parameters = new SrpParameters();
-			Assert.NotNull(parameters.N);
-			Assert.NotNull(parameters.G);
+			Assert.NotNull(parameters.Prime);
+			Assert.NotNull(parameters.Generator);
 			Assert.AreEqual(32, parameters.HashSizeBytes);
 			Assert.AreEqual(512, parameters.PaddedLength);
 		}
@@ -21,8 +21,8 @@ namespace SecureRemotePassword.Tests
 		{
 			var hasher = MD5.Create();
 			var parameters = new SrpParameters(hasher);
-			Assert.NotNull(parameters.N);
-			Assert.NotNull(parameters.G);
+			Assert.NotNull(parameters.Prime);
+			Assert.NotNull(parameters.Generator);
 			Assert.AreEqual(16, parameters.HashSizeBytes);
 			Assert.AreEqual(512, parameters.PaddedLength);
 		}
@@ -32,7 +32,7 @@ namespace SecureRemotePassword.Tests
 		{
 			var value = SrpInteger.FromHex("1234");
 			var parameters = new SrpParameters(paddedLength: 10);
-			Assert.AreEqual("0000001234", parameters.PAD(value).ToHex());
+			Assert.AreEqual("0000001234", parameters.Pad(value).ToHex());
 		}
 	}
 }

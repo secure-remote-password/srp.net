@@ -150,8 +150,8 @@ namespace SecureRemotePassword.Tests
 		public void SrpIntegerModPowRegressionTest()
 		{
 			var p = new SrpParameters();
-			var g = p.G;
-			var N = p.N;
+			var g = p.Generator;
+			var N = p.Prime;
 
 			var a = SrpInteger.FromHex("64e1124e73967bb4806cf5e3f151c574d0012147255e10fca02e9b4bafc8f4ba");
 			var A = g.ModPow(a, N);

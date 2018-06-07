@@ -39,7 +39,7 @@ namespace SecureRemotePassword
 		public string DerivePrivateKey(string salt, string userName, string password)
 		{
 			// H() — One-way hash function
-			var H = Parameters.H;
+			var H = Parameters.Hash;
 
 			// validate the parameters:
 			// s — User's salt, hexadecimal
@@ -62,8 +62,8 @@ namespace SecureRemotePassword
 		{
 			// N — A large safe prime (N = 2q+1, where q is prime)
 			// g — A generator modulo N
-			var N = Parameters.N;
-			var g = Parameters.G;
+			var N = Parameters.Prime;
+			var g = Parameters.Generator;
 
 			// x — Private key (derived from p and s)
 			var x = SrpInteger.FromHex(privateKey);
@@ -97,8 +97,8 @@ namespace SecureRemotePassword
 		{
 			// N — A large safe prime (N = 2q+1, where q is prime)
 			// g — A generator modulo N
-			var N = Parameters.N;
-			var g = Parameters.G;
+			var N = Parameters.Prime;
+			var g = Parameters.Generator;
 
 			// A = g^a (a = random number)
 			return g.ModPow(a, N);
@@ -113,8 +113,8 @@ namespace SecureRemotePassword
 		{
 			// H — One-way hash function
 			// PAD — Pad the number to have the same number of bytes as N
-			var H = Parameters.H;
-			var PAD = Parameters.PAD;
+			var H = Parameters.Hash;
+			var PAD = Parameters.Pad;
 
 			// u = H(PAD(A), PAD(B))
 			return H(PAD(A), PAD(B));
@@ -132,9 +132,9 @@ namespace SecureRemotePassword
 			// N — A large safe prime (N = 2q+1, where q is prime)
 			// g — A generator modulo N
 			// k — Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
-			var N = Parameters.N;
-			var g = Parameters.G;
-			var k = Parameters.K;
+			var N = Parameters.Prime;
+			var g = Parameters.Generator;
+			var k = Parameters.Multiplier;
 
 			// S = (B - kg^x) ^ (a + ux)
 			return (B - (k * g.ModPow(x, N))).ModPow(a + (u * x), N);
@@ -155,9 +155,9 @@ namespace SecureRemotePassword
 			// g — A generator modulo N
 			// k — Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
 			// H — One-way hash function
-			var N = Parameters.N;
-			var g = Parameters.G;
-			var H = Parameters.H;
+			var N = Parameters.Prime;
+			var g = Parameters.Generator;
+			var H = Parameters.Hash;
 
 			// a — Secret ephemeral value
 			// B — Public ephemeral value
@@ -208,7 +208,7 @@ namespace SecureRemotePassword
 		public void VerifySession(string clientPublicEphemeral, SrpSession clientSession, string serverSessionProof)
 		{
 			// H — One-way hash function
-			var H = Parameters.H;
+			var H = Parameters.Hash;
 
 			// A — Public ephemeral values
 			// M — Proof of K
