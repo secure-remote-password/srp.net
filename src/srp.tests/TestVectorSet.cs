@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
+using Blake2s;
 using Blake2Sharp;
 
 namespace SecureRemotePassword.Tests
@@ -44,14 +46,17 @@ namespace SecureRemotePassword.Tests
 				var hasher = SrpHash.CreateHasher(H);
 				if (hasher == null)
 				{
+					HashAlgorithm blake2s() =>
+						Blake2S.Create().AsHashAlgorithm();
+
 					HashAlgorithm blake2b(int bits) =>
 						new Blake2BHasher(new Blake2BConfig { OutputSizeInBits = bits })
 							.AsHashAlgorithm();
 
 					switch (H.ToLowerInvariant())
 					{
-						case "blake2s":
-							return null;
+						case "blake2s-256":
+							return blake2s();
 
 						case "blake2b-224":
 							return blake2b(224);

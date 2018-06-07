@@ -45,6 +45,7 @@ namespace SecureRemotePassword.Tests
 			if (parameters == null)
 			{
 				// not supported hash function
+				Assert.Warn($"Unsupported hash function, skipping: {testVector.H}");
 				return;
 			}
 
