@@ -191,11 +191,8 @@ var server = new SrpServer(customParams);
 
 `srp.net` is designed to be compatible with other implementations hosted
 in [secure-remote-password](https://github.com/secure-remote-password/) organization.
-It's also compatible with these libraries:
 
-* Javascript: [secure-remote-password](https://npmjs.com/package/secure-remote-password) npm package by [Linus Unnebäck](https://github.com/LinusU/secure-remote-password)
-* Python: [srptools](https://pypi.org/project/srptools/) by [Igor Starikov](https://github.com/idlesign/srptools)
-* Swift: [SRP for Swift](http://boukehaarsma.nl/SRP/master/) by [Bouke Haarsma](https://github.com/Bouke/SRP)
+Other compatible libraries are listed [here](https://github.com/secure-remote-password/implementations/blob/master/README.md).
 
 ## References
 
