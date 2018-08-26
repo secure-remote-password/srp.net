@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -30,7 +31,7 @@ namespace SecureRemotePassword.Tests
 		private string GetJsonResource(string name)
 		{
 			var nspace = typeof(SrpTestVectors).Namespace;
-			var assembly = typeof(SrpTestVectors).Assembly;
+			var assembly = typeof(SrpTestVectors).GetAssembly();
 			var rstream = assembly.GetManifestResourceStream($"{nspace}.TestVectors.{name}.json");
 			using (var streamReader = new StreamReader(rstream))
 			{

@@ -68,6 +68,9 @@ namespace SecureRemotePassword
 			{
 				switch (algorithm.ToLowerInvariant())
 				{
+					case "md5":
+						return MD5.Create();
+
 					case "sha1":
 						return SHA1.Create();
 
@@ -75,10 +78,10 @@ namespace SecureRemotePassword
 						return SHA256.Create();
 
 					case "sha384":
-						return SHA256.Create();
+						return SHA384.Create();
 
 					case "sha512":
-						return SHA256.Create();
+						return SHA512.Create();
 				}
 			}
 
