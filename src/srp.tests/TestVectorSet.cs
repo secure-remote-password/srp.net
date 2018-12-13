@@ -89,7 +89,7 @@ namespace SecureRemotePassword.Tests
 
 				// convert size in bits to padded length in chars
 				var paddedLength = Size / 4;
-				return new SrpParameters(hasher, N, g, paddedLength);
+				return new SrpParameters(CreateHasher, N, g, paddedLength);
 			}
 		}
 	}

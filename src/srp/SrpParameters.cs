@@ -18,16 +18,16 @@ namespace SecureRemotePassword
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SrpParameters"/> class.
 		/// </summary>
-		/// <param name="hashAlgorithm">The hashing algorithm.</param>
+		/// <param name="hashAlgorithmFactory">The hashing algorithm factory.</param>
 		/// <param name="largeSafePrime">Large safe prime number N (hexadecimal).</param>
 		/// <param name="generator">The generator value modulo N (hexadecimal).</param>
 		/// <param name="paddedLength">The hexadecimal length of N and g.</param>
-		public SrpParameters(HashAlgorithm hashAlgorithm = null, string largeSafePrime = null, string generator = null, int? paddedLength = null)
+		public SrpParameters(Func<HashAlgorithm> hashAlgorithmFactory = null, string largeSafePrime = null, string generator = null, int? paddedLength = null)
 		{
 			Prime = SrpInteger.FromHex(largeSafePrime ?? SrpConstants.SafePrime2048);
 			Generator = SrpInteger.FromHex(generator ?? SrpConstants.Generator2048);
 			PaddedLength = paddedLength ?? Prime.HexLength.Value;
-			Hasher = hashAlgorithm != null ? new SrpHash(hashAlgorithm) : new SrpHash<SHA256>();
+			Hasher = hashAlgorithmFactory != null ? new SrpHash(hashAlgorithmFactory) : new SrpHash<SHA256>();
 			Pad = i => i.Pad(PaddedLength);
 		}
 
@@ -43,7 +43,7 @@ namespace SecureRemotePassword
 		{
 			var result = new SrpParameters
 			{
-				Hasher = new SrpHash<T>()
+				Hasher = new SrpHash<T>(),
 			};
 
 			if (largeSafePrime != null)

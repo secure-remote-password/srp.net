@@ -14,15 +14,17 @@ namespace SecureRemotePassword
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SrpHash"/> class.
 		/// </summary>
-		/// <param name="hasher">The hashing algorithm.</param>
+		/// <param name="hasherFactory">The hashing algorithm factory method.</param>
 		/// <param name="algorithmName">The name of the algorithm.</param>
-		public SrpHash(HashAlgorithm hasher, string algorithmName = null)
+		public SrpHash(Func<HashAlgorithm> hasherFactory, string algorithmName = null)
 		{
-			Hasher = hasher;
+			HasherFactory = hasherFactory;
 			AlgorithmName = algorithmName ?? Hasher.GetType().Name;
 		}
 
-		private HashAlgorithm Hasher { get; }
+		private Func<HashAlgorithm> HasherFactory { get; }
+
+		private HashAlgorithm Hasher => HasherFactory();
 
 		/// <summary>
 		/// Computes the hash of the specified <see cref="string"/> or <see cref="SrpInteger"/> values.

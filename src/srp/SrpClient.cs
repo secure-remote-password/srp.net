@@ -125,7 +125,7 @@ namespace SecureRemotePassword
 		/// </summary>
 		/// <param name="a">Client secret ephemeral value.</param>
 		/// <param name="B">Server public ephemeral value.</param>
-		/// <param name="u">The computed value of u</param>
+		/// <param name="u">The computed value of u.</param>
 		/// <param name="x">The private key.</param>
 		internal SrpInteger ComputeS(SrpInteger a, SrpInteger B, SrpInteger u, SrpInteger x)
 		{
@@ -195,7 +195,7 @@ namespace SecureRemotePassword
 			return new SrpSession
 			{
 				Key = K.ToHex(),
-				Proof = M1.ToHex()
+				Proof = M1.ToHex(),
 			};
 		}
 

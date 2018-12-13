@@ -13,13 +13,13 @@ namespace SecureRemotePassword
 		/// Initializes a new instance of the <see cref="SrpHash{T}"/> class.
 		/// </summary>
 		public SrpHash()
-			: base(CreateHasher())
+			: base(CreateHasher)
 		{
 		}
 
 		/// <summary>
 		/// Creates the hasher of the given type <typeparamref name="T"/>.
 		/// </summary>
-		public static T CreateHasher() => (T)CreateHasher(typeof(T).Name);
+		public static HashAlgorithm CreateHasher() => CreateHasher(typeof(T).Name);
 	}
 }

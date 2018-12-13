@@ -64,7 +64,7 @@ namespace SecureRemotePassword
 		/// </summary>
 		/// <param name="A">Client public ephemeral value.</param>
 		/// <param name="b">Server secret ephemeral value.</param>
-		/// <param name="u">The computed value of u</param>
+		/// <param name="u">The computed value of u.</param>
 		/// <param name="v">The verifier.</param>
 		internal SrpInteger ComputeS(SrpInteger A, SrpInteger b, SrpInteger u, SrpInteger v)
 		{

@@ -4,9 +4,9 @@
     <Description>SRP-6a protocol implementation for .NET Standard 2.0 and .NET Framework 3.5+</Description>
     <Copyright>Copyright © 2018 Alexey Yakovlev</Copyright>
     <AssemblyTitle>srp</AssemblyTitle>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <FileVersion>1.0.3.0</FileVersion>
     <Authors>Alexey Yakovlev</Authors>
     <TargetFrameworks>net35;net40;net45;netstandard1.6;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -24,6 +24,9 @@
     <RootNamespace>SecureRemotePassword</RootNamespace>
     <PackageReleaseNotes>What's new:
 
+      v1.0.3:
+      - Fixed SrpParameters thread safety issue.
+
       v1.0.2:
       - Fixed sha384/sha512 support in .NET Standard 1.6 version.
 
@@ -38,7 +41,10 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net35'">

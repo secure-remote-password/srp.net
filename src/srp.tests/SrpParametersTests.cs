@@ -19,8 +19,7 @@ namespace SecureRemotePassword.Tests
 		[Test]
 		public void SrpParametersCanUseCustomHashAlgorithm()
 		{
-			var hasher = MD5.Create();
-			var parameters = new SrpParameters(hasher);
+			var parameters = new SrpParameters(MD5.Create);
 			Assert.NotNull(parameters.Prime);
 			Assert.NotNull(parameters.Generator);
 			Assert.AreEqual(16, parameters.HashSizeBytes);

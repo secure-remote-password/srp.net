@@ -64,7 +64,7 @@
 		/// Safe prime number, 3072-bit group.
 		/// </summary>
 		/// <remarks>
-		/// This prime is: 2^3072 - 2^3008 - 1 + 2^64 * { [2^2942 pi] + 1690314 }
+		/// This prime is: 2^3072 - 2^3008 - 1 + 2^64 * { [2^2942 pi] + 1690314 }.
 		/// </remarks>
 		public const string SafePrime3072 = @"
 			FFFFFFFF FFFFFFFF C90FDAA2 2168C234 C4C6628B 80DC1CD1 29024E08
@@ -91,7 +91,7 @@
 		/// Safe prime number, 4096-bit group.
 		/// </summary>
 		/// <remarks>
-		/// This prime is: 2^4096 - 2^4032 - 1 + 2^64 * { [2^3966 pi] + 240904 }
+		/// This prime is: 2^4096 - 2^4032 - 1 + 2^64 * { [2^3966 pi] + 240904 }.
 		/// </remarks>
 		public const string SafePrime4096 = @"
 			FFFFFFFF FFFFFFFF C90FDAA2 2168C234 C4C6628B 80DC1CD1 29024E08
@@ -123,7 +123,7 @@
 		/// Safe prime number, 6144-bit group.
 		/// </summary>
 		/// <remarks>
-		/// This prime is: 2^6144 - 2^6080 - 1 + 2^64 * { [2^6014 pi] + 929484 }
+		/// This prime is: 2^6144 - 2^6080 - 1 + 2^64 * { [2^6014 pi] + 929484 }.
 		/// </remarks>
 		public const string SafePrime6144 = @"
 			FFFFFFFF FFFFFFFF C90FDAA2 2168C234 C4C6628B 80DC1CD1 29024E08
@@ -164,7 +164,7 @@
 		/// Safe prime number, 8192-bit group.
 		/// </summary>
 		/// <remarks>
-		/// This prime is: 2^8192 - 2^8128 - 1 + 2^64 * { [2^8062 pi] + 4743158 }
+		/// This prime is: 2^8192 - 2^8128 - 1 + 2^64 * { [2^8062 pi] + 4743158 }.
 		/// </remarks>
 		public const string SafePrime8192 = @"
 			FFFFFFFF FFFFFFFF C90FDAA2 2168C234 C4C6628B 80DC1CD1 29024E08

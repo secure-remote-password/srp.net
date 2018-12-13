@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using NUnit.Framework;
+
+#if !NET_35
+using System.Threading.Tasks;
+#endif
 
 namespace SecureRemotePassword.Tests
 {
@@ -123,5 +128,41 @@ namespace SecureRemotePassword.Tests
 				throw;
 			}
 		}
+
+#if !NET_35
+		[Test]
+		public async Task ParallelAuthenticationTest()
+		{
+			var username = "demo";
+			var password = "insecure";
+			var parameters = new SrpParameters();
+			var server = new SrpServer(parameters);
+
+			// spawn multiple parallel threads reusing the same SrpParameters instance
+			var tasks = Enumerable.Range(0, 100).Select(i => Task.Run(() =>
+			{
+				var client = new SrpClient(parameters);
+
+				// sign up
+				var salt = client.GenerateSalt();
+				var privateKey = client.DerivePrivateKey(salt, username, password);
+				var verifier = client.DeriveVerifier(privateKey);
+
+				// authenticate
+				var clientEphemeral = client.GenerateEphemeral();
+				var serverEphemeral = server.GenerateEphemeral(verifier);
+				var clientSession = client.DeriveSession(clientEphemeral.Secret, serverEphemeral.Public, salt, username, privateKey);
+
+				var serverSession = server.DeriveSession(serverEphemeral.Secret, clientEphemeral.Public, salt, username, verifier, clientSession.Proof);
+				client.VerifySession(clientEphemeral.Public, clientSession, serverSession.Proof);
+
+				// make sure both the client and the server have the same session key
+				Assert.AreEqual(clientSession.Key, serverSession.Key);
+			}));
+
+			await Task.WhenAll(tasks);
+		}
+#endif
+
 	}
 }
