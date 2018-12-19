@@ -158,6 +158,17 @@ namespace SecureRemotePassword.Tests
 
 				// make sure both the client and the server have the same session key
 				Assert.AreEqual(clientSession.Key, serverSession.Key);
+
+				// verify padded length of all parameters
+				Assert.AreEqual(verifier.Length, parameters.PaddedLength);
+				Assert.AreEqual(clientEphemeral.Public.Length, parameters.PaddedLength);
+				Assert.AreEqual(clientEphemeral.Secret.Length, parameters.HashSizeBytes * 2);
+				Assert.AreEqual(serverEphemeral.Public.Length, parameters.PaddedLength);
+				Assert.AreEqual(serverEphemeral.Secret.Length, parameters.HashSizeBytes * 2);
+				Assert.AreEqual(serverSession.Key.Length, parameters.HashSizeBytes * 2);
+				Assert.AreEqual(clientSession.Key.Length, parameters.HashSizeBytes * 2);
+				Assert.AreEqual(serverSession.Proof.Length, parameters.HashSizeBytes * 2);
+				Assert.AreEqual(clientSession.Proof.Length, parameters.HashSizeBytes * 2);
 			}));
 
 			await Task.WhenAll(tasks);

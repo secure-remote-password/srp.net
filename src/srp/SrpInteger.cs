@@ -71,6 +71,8 @@ namespace SecureRemotePassword
 			HexLength = newLength,
 		};
 
+		internal static int Max(params int?[] values) => values.Max(v => v ?? 0);
+
 		/// <summary>
 		/// Generates the random integer number.
 		/// </summary>
@@ -119,9 +121,11 @@ namespace SecureRemotePassword
 		/// <summary>
 		/// Returns the fixed-length hexadecimal representation of the <see cref="SrpInteger"/> instance.
 		/// </summary>
-		public string ToHex()
+		/// <param name="hexLength">Custom hexadecimal length (optional)</param>
+		public string ToHex(int? hexLength = null)
 		{
-			if (!HexLength.HasValue)
+			hexLength = HexLength ?? hexLength;
+			if (!hexLength.HasValue)
 			{
 				throw new InvalidOperationException("Hexadecimal length is not specified");
 			}
@@ -135,7 +139,7 @@ namespace SecureRemotePassword
 			}
 
 			// ToString may add extra leading zeros to the positive BigIntegers, so we trim them first
-			return sign + value.ToString("x").TrimStart('0').PadLeft(HexLength.Value, '0');
+			return sign + value.ToString("x").TrimStart('0').PadLeft(hexLength.Value, '0');
 		}
 
 		/// <summary>
@@ -215,7 +219,7 @@ namespace SecureRemotePassword
 			return new SrpInteger
 			{
 				Value = left.Value - right.Value,
-				HexLength = left.HexLength,
+				HexLength = Max(left.HexLength, right.HexLength),
 			};
 		}
 
@@ -229,7 +233,7 @@ namespace SecureRemotePassword
 			return new SrpInteger
 			{
 				Value = left.Value + right.Value,
-				HexLength = left.HexLength,
+				HexLength = Max(left.HexLength, right.HexLength),
 			};
 		}
 
@@ -243,7 +247,7 @@ namespace SecureRemotePassword
 			return new SrpInteger
 			{
 				Value = dividend.Value / divisor.Value,
-				HexLength = dividend.HexLength,
+				HexLength = Max(dividend.HexLength, divisor.HexLength),
 			};
 		}
 
@@ -251,13 +255,13 @@ namespace SecureRemotePassword
 		/// Implements the operator %.
 		/// </summary>
 		/// <param name="dividend">The dividend.</param>
-		/// <param name="divisor">The divisor.</param>
-		public static SrpInteger operator %(SrpInteger dividend, SrpInteger divisor)
+		/// <param name="modulus">The modulus.</param>
+		public static SrpInteger operator %(SrpInteger dividend, SrpInteger modulus)
 		{
 			return new SrpInteger
 			{
-				Value = dividend.Value % divisor.Value,
-				HexLength = dividend.HexLength,
+				Value = dividend.Value % modulus.Value,
+				HexLength = modulus.HexLength,
 			};
 		}
 
@@ -271,7 +275,7 @@ namespace SecureRemotePassword
 			return new SrpInteger
 			{
 				Value = left.Value * right.Value,
-				HexLength = left.HexLength,
+				HexLength = null, // the padding is lost
 			};
 		}
 
@@ -285,7 +289,7 @@ namespace SecureRemotePassword
 			return new SrpInteger
 			{
 				Value = left.Value ^ right.Value,
-				HexLength = left.HexLength,
+				HexLength = Max(left.HexLength, right.HexLength),
 			};
 		}
 

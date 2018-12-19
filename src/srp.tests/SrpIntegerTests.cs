@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using NUnit.Framework;
 
@@ -82,7 +83,7 @@ namespace SecureRemotePassword.Tests
 		public void SrpIntegerMultiply()
 		{
 			var result = SrpInteger.FromHex("CAFE") * SrpInteger.FromHex("babe");
-			Assert.AreEqual("94133484", result.ToHex());
+			Assert.AreEqual("94133484", result.ToHex(8));
 		}
 
 		[Test]
@@ -95,7 +96,7 @@ namespace SecureRemotePassword.Tests
 		[Test]
 		public void SrpIntegerModulo()
 		{
-			var result = SrpInteger.FromHex("10") % SrpInteger.FromHex("9");
+			var result = SrpInteger.FromHex("10") % SrpInteger.FromHex("09");
 			Assert.AreEqual("07", result.ToHex());
 		}
 
@@ -252,6 +253,43 @@ namespace SecureRemotePassword.Tests
 			rnd = SrpInteger.RandomInteger(8);
 			Assert.AreEqual(16, rnd.ToHex().Length);
 			Assert.AreNotEqual("0000000000000000", rnd.ToHex());
+		}
+
+		[Test]
+		public void ArithmeticOperationsKeepTheLargestHexSizeOfOperands()
+		{
+			var left = SrpInteger.FromHex("12345");
+			var right = SrpInteger.FromHex("1234567890");
+			var operations = new Func<SrpInteger, SrpInteger, SrpInteger>[]
+			{
+				(a, b) => a + b,
+				(a, b) => a - b,
+				(a, b) => a / b,
+				(a, b) => a ^ b,
+			};
+
+			Assert.Multiple(() =>
+			{
+				foreach (var op in operations)
+				{
+					Assert.AreEqual(10, op(left, right).HexLength);
+					Assert.AreEqual(10, op(right, left).HexLength);
+				}
+			});
+
+			// multiplication loses hex widths
+			Assert.IsNull((left * right).HexLength);
+			Assert.IsNull((right * left).HexLength);
+
+			// mod gets the width of the modulus
+			Assert.AreEqual(10, (left % right).HexLength);
+			Assert.AreEqual(5, (right % left).HexLength);
+
+			// modPow gets the width of the modulus
+			Assert.AreEqual(5, left.ModPow(right, left).HexLength);
+			Assert.AreEqual(5, right.ModPow(left, left).HexLength);
+			Assert.AreEqual(10, left.ModPow(right, right).HexLength);
+			Assert.AreEqual(10, right.ModPow(left, right).HexLength);
 		}
 	}
 }

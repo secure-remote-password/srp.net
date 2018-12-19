@@ -25,16 +25,16 @@
     <PackageReleaseNotes>What's new:
 
       v1.0.3:
-      - Fixed SrpParameters thread safety issue.
+      — Fixed SrpParameters thread safety issue.
 
       v1.0.2:
-      - Fixed sha384/sha512 support in .NET Standard 1.6 version.
+      — Fixed sha384/sha512 support in .NET Standard 1.6 version.
 
       v1.0.1:
-      - Enabled .NET Standard 1.6 support.
+      — Enabled .NET Standard 1.6 support.
 
       v1.0.0:
-      - Initial release.
+      — Initial release.
     </PackageReleaseNotes>
     <CodeAnalysisRuleSet>..\srp.ruleset</CodeAnalysisRuleSet>
     <BaseOutputPath>..\..\bin\</BaseOutputPath>
