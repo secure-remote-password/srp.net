@@ -4,9 +4,9 @@
     <Description>SRP-6a protocol implementation for .NET Standard 2.0 and .NET Framework 3.5+</Description>
     <Copyright>Copyright © 2018 Alexey Yakovlev</Copyright>
     <AssemblyTitle>srp</AssemblyTitle>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
+    <FileVersion>$(Version).0</FileVersion>
     <Authors>Alexey Yakovlev</Authors>
     <TargetFrameworks>net35;net40;net45;netstandard1.6;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -23,6 +23,9 @@
     <DebugType>full</DebugType>
     <RootNamespace>SecureRemotePassword</RootNamespace>
     <PackageReleaseNotes>What's new:
+
+      v1.0.4:
+      — Fixed padding issues in the arithmetic operations.
 
       v1.0.3:
       — Fixed SrpParameters thread safety issue.

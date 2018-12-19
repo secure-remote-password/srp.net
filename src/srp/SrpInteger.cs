@@ -121,7 +121,7 @@ namespace SecureRemotePassword
 		/// <summary>
 		/// Returns the fixed-length hexadecimal representation of the <see cref="SrpInteger"/> instance.
 		/// </summary>
-		/// <param name="hexLength">Custom hexadecimal length (optional)</param>
+		/// <param name="hexLength">Custom hexadecimal length (optional).</param>
 		public string ToHex(int? hexLength = null)
 		{
 			hexLength = HexLength ?? hexLength;
