@@ -36,9 +36,9 @@ var userName = "alice";
 var password = "password123";
 
 var client = new SrpClient();
-var salt = srp.GenerateSalt();
-var privateKey = srp.DerivePrivateKey(salt, userName, password);
-var verifier = srp.DeriveVerifier(privateKey);
+var salt = client.GenerateSalt();
+var privateKey = client.DerivePrivateKey(salt, userName, password);
+var verifier = client.DeriveVerifier(privateKey);
 
 // send userName, salt and verifier to server
 ```
@@ -59,7 +59,7 @@ using SecureRemotePassword;
 var userName = "alice";
 
 var client = new SrpClient();
-var clientEphemeral = client.GenerateEphemeral();
+var clientEphemeral = client.GenerateEphemeral(verifier);
 
 // send userName and clientEphemeral.Public to server
 ```
@@ -136,6 +136,8 @@ client.VerifySession(clientEphemeral.Public, clientSession, serverSessionProof);
 
 
 ```c#
+using SecureRemotePassword;
+
 var client = new SrpClient();
 var server = new SrpServer();
 
