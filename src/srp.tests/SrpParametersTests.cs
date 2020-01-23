@@ -33,5 +33,13 @@ namespace SecureRemotePassword.Tests
 			var parameters = new SrpParameters(paddedLength: 10);
 			Assert.AreEqual("0000001234", parameters.Pad(value).ToHex());
 		}
+
+		[Test]
+		public void SrpParametersCanOverridePaddedLength()
+		{
+			var parameters = SrpParameters.Create<SHA1>(SrpConstants.SafePrime1024, SrpConstants.Generator1024, 1000);
+			Assert.AreEqual(1000, parameters.PaddedLength);
+			Assert.IsNotEmpty(parameters.ToString());
+		}
 	}
 }

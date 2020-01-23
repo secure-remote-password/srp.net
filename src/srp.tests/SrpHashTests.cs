@@ -100,5 +100,14 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(hash512, sha512(parts));
 			Assert.AreEqual(512 / 8, new SrpHash<SHA512>().HashSizeBytes);
 		}
+
+		[Test]
+		public void SrpHashMiscTests()
+		{
+			var hash = new SrpHash(() => MD5.Create());
+			Assert.IsNotEmpty(hash.AlgorithmName);
+
+			var tmp = hash.ComputeHash(null, null, null);
+		}
 	}
 }

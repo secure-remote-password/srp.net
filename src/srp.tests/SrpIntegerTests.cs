@@ -39,6 +39,13 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual("000a", SrpInteger.FromHex("000a").ToHex());
 			Assert.AreEqual("0000a", SrpInteger.FromHex("0000a").ToHex());
 			Assert.AreEqual("00000a", SrpInteger.FromHex("00000a").ToHex());
+
+			// zero
+			si = SrpInteger.FromHex(null);
+			Assert.AreEqual(SrpInteger.Zero, si);
+
+			si = SrpInteger.FromHex(string.Empty);
+			Assert.AreEqual(SrpInteger.Zero, si);
 		}
 
 		[Test]
@@ -226,6 +233,12 @@ namespace SecureRemotePassword.Tests
 
 			si = SrpInteger.FromByteArray(new byte[] { 0xfa, 0xc3 });
 			Assert.AreEqual("fac3", si.ToHex());
+
+			si = SrpInteger.FromByteArray(null);
+			Assert.AreEqual(SrpInteger.Zero, si);
+
+			si = SrpInteger.FromByteArray(new byte[0]);
+			Assert.AreEqual(SrpInteger.Zero, si);
 		}
 
 		[Test]
@@ -290,6 +303,32 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(5, right.ModPow(left, left).HexLength);
 			Assert.AreEqual(10, left.ModPow(right, right).HexLength);
 			Assert.AreEqual(10, right.ModPow(left, right).HexLength);
+		}
+
+		[Test]
+		public void SrpIntegerFromSmallIntegers()
+		{
+			var tmp = SrpInteger.Zero;
+
+			tmp = 1; // int
+			tmp = 1U; // unsigned int
+			tmp = 2L; // long
+			tmp = 2UL; // unsigned long
+
+			// check GetHashCode
+			Assert.AreNotEqual(0, tmp.GetHashCode());
+		}
+
+		[Test]
+		public void InvalidValues()
+		{
+			// negative bytes
+			Assert.Throws<ArgumentException>(() => SrpInteger.RandomInteger(0));
+			Assert.Throws<ArgumentException>(() => SrpInteger.RandomInteger(-1));
+
+			// hex length not specified
+			var tmp = new SrpInteger("1234");
+			Assert.Throws<InvalidOperationException>(() => tmp.ToHex());
 		}
 	}
 }

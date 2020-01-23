@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>SRP-6a protocol implementation for .NET Standard 2.0 and .NET Framework 3.5+</Description>
-    <Copyright>Copyright © 2018 Alexey Yakovlev</Copyright>
+    <Copyright>Copyright © 2018-2020 Alexey Yakovlev</Copyright>
     <AssemblyTitle>srp</AssemblyTitle>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>$(Version).0</FileVersion>
     <Authors>Alexey Yakovlev</Authors>
@@ -23,6 +23,9 @@
     <DebugType>full</DebugType>
     <RootNamespace>SecureRemotePassword</RootNamespace>
     <PackageReleaseNotes>What's new:
+
+      v1.0.5:
+      — Added IsValidSalt and IsValidVerifier utility methods.
 
       v1.0.4:
       — Fixed padding issues in the arithmetic operations.
