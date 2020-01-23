@@ -1,4 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using NUnit.Framework;
 
 namespace SecureRemotePassword.Tests
@@ -9,15 +12,30 @@ namespace SecureRemotePassword.Tests
 	[TestFixture]
 	public class SrpUtilityTests
 	{
-		[TestCase(SrpConstants.SafePrime1024, SrpConstants.Generator1024)]
-		[TestCase(SrpConstants.SafePrime1536, SrpConstants.Generator1536)]
-		[TestCase(SrpConstants.SafePrime2048, SrpConstants.Generator2048)]
-		[TestCase(SrpConstants.SafePrime3072, SrpConstants.Generator3072)]
-		[TestCase(SrpConstants.SafePrime4096, SrpConstants.Generator4096)]
-		[TestCase(SrpConstants.SafePrime6144, SrpConstants.Generator6144)]
-		[TestCase(SrpConstants.SafePrime8192, SrpConstants.Generator8192)]
-		public void SrpImplementationGeneratesValidSaltAndVerifier(string prime, string generator)
+		private static Dictionary<int, string> Primes { get; } = new Dictionary<int, string>
 		{
+			{ 1024, $"{SrpConstants.SafePrime1024}|{SrpConstants.Generator1024}" },
+			{ 1536, $"{SrpConstants.SafePrime1536}|{SrpConstants.Generator1536}" },
+			{ 2048, $"{SrpConstants.SafePrime2048}|{SrpConstants.Generator2048}" },
+			{ 3072, $"{SrpConstants.SafePrime3072}|{SrpConstants.Generator3072}" },
+			{ 4096, $"{SrpConstants.SafePrime4096}|{SrpConstants.Generator4096}" },
+			{ 6144, $"{SrpConstants.SafePrime6144}|{SrpConstants.Generator6144}" },
+			{ 8192, $"{SrpConstants.SafePrime8192}|{SrpConstants.Generator8192}" },
+		};
+
+		[TestCase(1024)]
+		[TestCase(1536)]
+		[TestCase(2048)]
+		[TestCase(3072)]
+		[TestCase(4096)]
+		[TestCase(6144)]
+		[TestCase(8192)]
+		public void SrpImplementationGeneratesValidSaltAndVerifier(int bits)
+		{
+			var primes = Primes[bits].Split('|');
+			var prime = primes.First();
+			var generator = primes.Last();
+
 			SrpImplementationGeneratesValidSaltAndVerifier<MD5>(prime, generator);
 			SrpImplementationGeneratesValidSaltAndVerifier<SHA1>(prime, generator);
 			SrpImplementationGeneratesValidSaltAndVerifier<SHA256>(prime, generator);

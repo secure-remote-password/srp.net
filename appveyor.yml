@@ -1,6 +1,6 @@
 version: 1.0.{build}
 clone_folder: c:\projects\srp.net
-image: Visual Studio 2019
+image: Visual Studio 2017
 
 install:
 - git submodule update --init --recursive
