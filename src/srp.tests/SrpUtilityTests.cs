@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using NUnit.Framework;
@@ -46,12 +45,10 @@ namespace SecureRemotePassword.Tests
 		private void SrpImplementationGeneratesValidSaltAndVerifier<T>(string prime, string generator)
 			where T : HashAlgorithm
 		{
-			// set up parameters
+			// generate values
 			var parameters = SrpParameters.Create<T>(prime, generator);
 			var client = new SrpClient(parameters);
 			var server = new SrpServer(parameters);
-
-			// sign up
 			var salt = client.GenerateSalt();
 			var privateKey = client.DerivePrivateKey(salt, "root", "123");
 			var verifier = client.DeriveVerifier(privateKey);
@@ -59,6 +56,35 @@ namespace SecureRemotePassword.Tests
 			// verify generated values
 			Assert.IsTrue(parameters.IsValidSalt(salt));
 			Assert.IsTrue(parameters.IsValidVerifier(verifier));
+		}
+
+		[Test]
+		public void InvalidSaltAndVerifierAreReported()
+		{
+			var client = new SrpClient();
+			var server = new SrpServer();
+			var parameters = server.Parameters;
+			var salt = client.GenerateSalt();
+			var privateKey = client.DerivePrivateKey(salt, "root", "123");
+			var verifier = client.DeriveVerifier(privateKey);
+
+			// valid examples
+			Assert.IsTrue(parameters.IsValidSalt(salt));
+			Assert.IsTrue(parameters.IsValidVerifier(verifier));
+
+			// invalid examples
+			Assert.IsFalse(parameters.IsValidSalt(null));
+			Assert.IsFalse(parameters.IsValidVerifier(null));
+			Assert.IsFalse(parameters.IsValidSalt("123"));
+			Assert.IsFalse(parameters.IsValidVerifier("123"));
+			Assert.IsFalse(parameters.IsValidSalt(salt + "01"));
+			Assert.IsFalse(parameters.IsValidVerifier(verifier + "01"));
+			Assert.IsFalse(parameters.IsValidSalt(salt.Substring(2)));
+			Assert.IsFalse(parameters.IsValidVerifier(verifier.Substring(2)));
+			Assert.IsFalse(parameters.IsValidSalt(salt.Replace("a", "g")));
+			Assert.IsFalse(parameters.IsValidVerifier(verifier.Replace("f", "h")));
+			Assert.IsFalse(parameters.IsValidSalt(verifier));
+			Assert.IsFalse(parameters.IsValidVerifier(salt));
 		}
 	}
 }
