@@ -1,11 +1,12 @@
 ﻿using System.Security;
+using SecureRemotePassword.Interfaces;
 
 namespace SecureRemotePassword
 {
 	/// <summary>
 	/// Client-side code of the SRP-6a protocol.
 	/// </summary>
-	public class SrpClient
+	public class SrpClient : ISrpClient
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SrpClient"/> class.
