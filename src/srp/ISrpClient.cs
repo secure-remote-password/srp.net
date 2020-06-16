@@ -1,4 +1,4 @@
-﻿namespace SecureRemotePassword.Interfaces
+﻿namespace SecureRemotePassword
 {
 	/// <summary>
 	/// Client-side code of the SRP-6a protocol.
