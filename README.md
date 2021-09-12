@@ -197,7 +197,7 @@ in [secure-remote-password](https://github.com/secure-remote-password/) organiza
 At the time of writing, the [secure-remote-password](https://npmjs.com/package/secure-remote-password) npm package is incompatible with this implementation because it does not pad values according to RFC5054. 
 
 * If you have control over both client and server, it is recommended to upgrade both to [this version](https://github.com/LinusU/secure-remote-password/pull/13), as outlined [here](https://github.com/secure-remote-password/srp.net/issues/7#issuecomment-561353784).
-* If you are forced to maintain compatibility with an existing server, you can disable padding by setting initialising the client with `new SrpClient(new SrpParameters { PaddedLength = 0 })`. This is _not recommended_, as the resulting behaviour is incompatible with libraries that follow the standard.
+* If you are forced to maintain compatibility with an existing server, you can disable padding by  initializing the client with `new SrpClient(new SrpParameters { PaddedLength = 0 })`. This is _not recommended_, as the resulting behavior is incompatible with libraries that follow the standard.
 
 Other compatible libraries are listed [here](https://github.com/secure-remote-password/implementations/blob/master/README.md).
 
