@@ -84,6 +84,23 @@ namespace SecureRemotePassword.Tests
 			Assert.AreEqual(clientSessionKey, clientSession.Key);
 			Assert.AreEqual(clientSessionProof, clientSession.Proof);
 		}
+		
+		[Test]
+		public void SrpClientDeriveSessionWithRevisionSix()
+		{
+			var clientEphemeralSecret = "27b282fc8fbf8d8a5a075ff4992406ec730bc80eea2f9b89a75bb95f1272265e";
+			var serverEphemeralPublic = "084153f1c6374fbf166f99b870b771fbd4ce3d3455671d5ee974eae65a06d1791b263af47c7fc2b4288267b943f8c30d3c049f0627a60badb78be3708a76b7ab0d1a64235cf00e7376001e3bddaccfc90148752062e36d70a81a56d3b4446f258beb255d17bd1b3aa05bb6012ca306ab1342dcc558c66daa19d1169b7cefb6005fcd92fbc4d593f3e4fec3e356b214c89fe26508c49b11b9efa04ecf6f05a748a50464252909eca2e04c9623d0997273b28499b1ea8c42d5a022609e2a89f6906e13dd3c9142a92575424311448fdf588524a64488fb8d2fcd1a5f2b2c059515fe0c83fd499b7b3fb2fe46f42fa7fc8d72cc0c04a5c9b22ebceddebf8fac4d8e";
+			var salt = "d420d13b7e510e9457fb59d03819c6475fe53f680b4abb963ef9f6d4f6ddb04e";
+			var username = "bozo";
+			var privateKey = "f8af13ffc45b3c64a826e3a133b8a74d0484e47625c049b7f635dd233cbda124";
+			var clientSessionKey = "01d4e803f88344e4981b8abea7fad6f6a7338f1de229c01c23f3a3b33112f62b";
+			var clientSessionProof = "8e48cf197a5ab02ffaf4052810182158c240df68de5d682c19b8189323b3c88d";
+
+			var clientSession = new SrpClient(new SrpParameters(revision: SrpRevision.Six)).DeriveSession(clientEphemeralSecret, serverEphemeralPublic, salt, username, privateKey);
+			Assert.IsNotNull(clientSession);
+			Assert.AreEqual(clientSessionKey, clientSession.Key);
+			Assert.AreEqual(clientSessionProof, clientSession.Proof);
+		}
 
 		[Test]
 		public void SrpClientDoesntAcceptZeroB()
