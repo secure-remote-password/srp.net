@@ -6,6 +6,7 @@
 
 # User-specific files
 .idea/
+.temp
 *.suo
 *.user
 *.userosscache
