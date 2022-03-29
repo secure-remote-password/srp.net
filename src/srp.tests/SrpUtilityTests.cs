@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using NUnit.Framework;
+using StringPair = System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace SecureRemotePassword.Tests
 {
@@ -11,15 +11,15 @@ namespace SecureRemotePassword.Tests
 	[TestFixture]
 	public class SrpUtilityTests
 	{
-		private static Dictionary<int, string> Primes { get; } = new Dictionary<int, string>
+		private static Dictionary<int, StringPair> Primes { get; } = new Dictionary<int, StringPair>
 		{
-			{ 1024, $"{SrpConstants.SafePrime1024}|{SrpConstants.Generator1024}" },
-			{ 1536, $"{SrpConstants.SafePrime1536}|{SrpConstants.Generator1536}" },
-			{ 2048, $"{SrpConstants.SafePrime2048}|{SrpConstants.Generator2048}" },
-			{ 3072, $"{SrpConstants.SafePrime3072}|{SrpConstants.Generator3072}" },
-			{ 4096, $"{SrpConstants.SafePrime4096}|{SrpConstants.Generator4096}" },
-			{ 6144, $"{SrpConstants.SafePrime6144}|{SrpConstants.Generator6144}" },
-			{ 8192, $"{SrpConstants.SafePrime8192}|{SrpConstants.Generator8192}" },
+			[1024] = new StringPair(SrpConstants.SafePrime1024, SrpConstants.Generator1024),
+			[1536] = new StringPair(SrpConstants.SafePrime1536, SrpConstants.Generator1536),
+			[2048] = new StringPair(SrpConstants.SafePrime2048, SrpConstants.Generator2048),
+			[3072] = new StringPair(SrpConstants.SafePrime3072, SrpConstants.Generator3072),
+			[4096] = new StringPair(SrpConstants.SafePrime4096, SrpConstants.Generator4096),
+			[6144] = new StringPair(SrpConstants.SafePrime6144, SrpConstants.Generator6144),
+			[8192] = new StringPair(SrpConstants.SafePrime8192, SrpConstants.Generator8192),
 		};
 
 		[TestCase(1024)]
@@ -31,9 +31,9 @@ namespace SecureRemotePassword.Tests
 		[TestCase(8192)]
 		public void SrpImplementationGeneratesValidSaltAndVerifier(int bits)
 		{
-			var primes = Primes[bits].Split('|');
-			var prime = primes.First();
-			var generator = primes.Last();
+			var primes = Primes[bits];
+			var prime = primes.Key;
+			var generator = primes.Value;
 
 			SrpImplementationGeneratesValidSaltAndVerifier<MD5>(prime, generator);
 			SrpImplementationGeneratesValidSaltAndVerifier<SHA1>(prime, generator);
@@ -48,7 +48,6 @@ namespace SecureRemotePassword.Tests
 			// generate values
 			var parameters = SrpParameters.Create<T>(prime, generator);
 			var client = new SrpClient(parameters);
-			var server = new SrpServer(parameters);
 			var salt = client.GenerateSalt();
 			var privateKey = client.DerivePrivateKey(salt, "root", "123");
 			var verifier = client.DeriveVerifier(privateKey);
