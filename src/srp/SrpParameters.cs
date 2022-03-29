@@ -128,7 +128,7 @@ namespace SecureRemotePassword
 		public int PaddedLength { get; set; }
 
 		/// <summary>
-		/// Gets or sets the length of the padded N and g values.
+		/// Gets or sets the revision of the SRP protocol, which affects the exact algorithms used.
 		/// </summary>
 		public SrpRevision Revision { get; set; }
 
