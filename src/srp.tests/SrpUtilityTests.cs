@@ -81,8 +81,8 @@ namespace SecureRemotePassword.Tests
 			Assert.IsFalse(parameters.IsValidVerifier(verifier + "01"));
 			Assert.IsFalse(parameters.IsValidSalt(salt.Substring(2)));
 			Assert.IsFalse(parameters.IsValidVerifier(verifier.Substring(2)));
-			Assert.IsFalse(parameters.IsValidSalt(salt.Replace("a", "g")));
-			Assert.IsFalse(parameters.IsValidVerifier(verifier.Replace("f", "h")));
+			Assert.IsFalse(parameters.IsValidSalt(salt.Replace(salt[0], 'g')));
+			Assert.IsFalse(parameters.IsValidVerifier(verifier.Replace(salt[0], 'h')));
 			Assert.IsFalse(parameters.IsValidSalt(verifier));
 			Assert.IsFalse(parameters.IsValidVerifier(salt));
 		}
