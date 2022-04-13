@@ -110,8 +110,7 @@ namespace SecureRemotePassword
 			var I = username + string.Empty;
 			var v = SrpInteger.FromHex(verifier);
 
-			// B = kv + g^b (b = random number)
-			var B = ((k * v) + g.ModPow(b, N)) % N;
+			var B = ComputeB(verifier, b);
 
 			// A % N > 0
 			if (A % N == 0)
