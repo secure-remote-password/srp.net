@@ -29,7 +29,7 @@ namespace SecureRemotePassword
 		{
 			// B = kv + g^b (b = random number)
 			var b = SrpInteger.RandomInteger(Parameters.HashSizeBytes);
-			var B = ComputeB(verifier, b);
+			var B = ComputeB(SrpInteger.FromHex(verifier), b);
 
 			return new SrpEphemeral
 			{
@@ -41,9 +41,9 @@ namespace SecureRemotePassword
 		/// <summary>
 		/// Generates the public ephemeral value from the given verifier and the secret.
 		/// </summary>
-		/// <param name="verifier">Verifier.</param>
+		/// <param name="v">Password verifier.</param>
 		/// <param name="b">Secret server ephemeral.</param>
-		internal SrpInteger ComputeB(string verifier, SrpInteger b)
+		internal SrpInteger ComputeB(SrpInteger v, SrpInteger b)
 		{
 			// N — A large safe prime (N = 2q+1, where q is prime)
 			// g — A generator modulo N
@@ -51,9 +51,6 @@ namespace SecureRemotePassword
 			var N = Parameters.Prime;
 			var g = Parameters.Generator;
 			var k = Parameters.Multiplier;
-
-			// v — Password verifier
-			var v = SrpInteger.FromHex(verifier);
 
 			// B = kv + g^b (b = random number)
 			return ((k * v) + g.ModPow(b, N)) % N;
@@ -110,7 +107,8 @@ namespace SecureRemotePassword
 			var I = username + string.Empty;
 			var v = SrpInteger.FromHex(verifier);
 
-			var B = ComputeB(verifier, b);
+			// B = kv + g^b (b = random number)
+			var B = ComputeB(v, b);
 
 			// A % N > 0
 			if (A % N == 0)

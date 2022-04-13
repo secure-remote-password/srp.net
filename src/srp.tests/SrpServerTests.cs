@@ -30,7 +30,7 @@ namespace SecureRemotePassword.Tests
 			var server = new SrpServer();
 			var verifier = "a113f1b3ed0aed0bf3ec043b80eb8a5a983b201237b2d14bf59b6eaa09b3bc8c9b8371368974395bef93b2beba1ca95fd0eec768915fcb7725fba212850e285d92e3d89995dad4fbc430bed66f1049a7a95aea09a3a3e7a797152135d6e881ac8f703b886e6ba9f68fc8a304b1670b2b8adb109932fa9c642810598ef45d60a73b5e0fcc11c1fcc3989d2254a2407d7ffea3c4dc7c3511baa2137f4b2e9226bfd082e1acfe03d3a944810c41cbf633220cadb107fef709075b46796a1e632dd9aa075e40e4619998ef26e1c09238839883cdf3eee3804a82ca4bc3cd31bdf9c8cd2535511dcbc00491e5fe93e155321c7b686bda115b92a2d7bb5fb01a51355e";
 			var secret = "ddfddf4060e11ef3f5389b8be0ff4f5133f8958aa0dafb0e4ad65949cb5c723d";
-			var ephemeral = server.ComputeB(verifier, SrpInteger.FromHex(secret)).ToHex();
+			var ephemeral = server.ComputeB(SrpInteger.FromHex(verifier), SrpInteger.FromHex(secret)).ToHex();
 			Assert.IsTrue(ephemeral.Length == server.Parameters.PaddedLength);
 		}
 
