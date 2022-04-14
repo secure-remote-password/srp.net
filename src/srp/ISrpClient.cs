@@ -8,7 +8,11 @@
 		/// <summary>
 		/// Generates the random salt of the same size as a used hash.
 		/// </summary>
-		string GenerateSalt();
+    /// <param name="saltLength">
+		/// An optional, custom salt length specifying the number of bytes. If it is unset,
+		/// the `HashSizeBytes` of the hash function from the `Parameters` will be used.
+		//// </param>
+		string GenerateSalt(int? saltLength = null);
 
 		/// <summary>
 		/// Derives the private key from the given salt, user name and password.
