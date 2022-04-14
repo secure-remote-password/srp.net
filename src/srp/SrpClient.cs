@@ -24,9 +24,13 @@ namespace SecureRemotePassword
 		/// <summary>
 		/// Generates the random salt of the same size as a used hash.
 		/// </summary>
-		public string GenerateSalt()
+		/// <param name="saltLength">
+		/// An optional, custom salt length specifying the number of bytes. If it is unset,
+		/// the `HashSizeBytes` of the hash function from the `Parameters` will be used.
+		//// </param>
+		public string GenerateSalt(int? saltLength = null)
 		{
-			var hashSize = Parameters.HashSizeBytes;
+			var hashSize = saltLength ?? Parameters.HashSizeBytes;
 			return SrpInteger.RandomInteger(hashSize).ToHex();
 		}
 
