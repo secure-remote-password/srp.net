@@ -42,7 +42,22 @@ namespace SecureRemotePassword.Tests
 			var sha512 = SrpHash.CreateHasher("sha512");
 			Assert.NotNull(sha512);
 		}
+		
+		#if NETCOREAPP2_0_OR_GREATER
+		[Test]
+		public void CreateHasherByRegisteredNameTests()
+		{
+			const string hashName = "MyHasher";
+			var custom = SrpHash.CreateHasher(hashName);
+			Assert.Null(custom);
 
+			CryptoConfig.AddAlgorithm(typeof(SHA256Managed), hashName);
+
+			custom = SrpHash.CreateHasher(hashName);
+			Assert.NotNull(custom);
+		}
+		#endif
+		
 		[Test]
 		public void SrpHashComputesValidStringHashes()
 		{

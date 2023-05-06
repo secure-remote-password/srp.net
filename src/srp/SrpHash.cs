@@ -61,11 +61,14 @@ namespace SecureRemotePassword
 		{
 			var result = default(HashAlgorithm);
 
-			// CryptoConfig is not available on .NET Standard 1.6
-			#if USE_CRYPTO_CONFIG
+			// CryptoConfig is not available on .NET Standard 1.6 or browser runtimes.
 			result = (HashAlgorithm)CryptoConfig.CreateFromName(algorithm);
+			#if USE_CRYPTO_CONFIG
+			if (result == null)
+			{
+				result = (HashAlgorithm)System.Security.Cryptography.CryptoConfig.CreateFromName(algorithm);
+			}
 			#endif
-
 			if (result == null)
 			{
 				switch (algorithm.ToLowerInvariant())
